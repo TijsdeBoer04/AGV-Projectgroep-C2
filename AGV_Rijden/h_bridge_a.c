@@ -7,24 +7,24 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include "h_bridge.h"
+#include "h_bridge_a.h"
 
 ISR(TIMER0_OVF_vect)
 {
 	if (OCR0A == 0 && OCR0B == 0)
 	{
-		PORT_RPWM &= ~(1<<PIN_RPWM);
-		PORT_LPWM &= ~(1<<PIN_LPWM);
+		PORT_RPWM_A &= ~(1<<PIN_RPWM_A);
+		PORT_LPWM_A &= ~(1<<PIN_LPWM_A);
 	}
 	else if (OCR0A != 0)
 	{
-		PORT_LPWM &= ~(1<<PIN_LPWM);
-		PORT_RPWM |= (1<<PIN_RPWM);
+		PORT_LPWM_A&= ~(1<<PIN_LPWM_A);
+		PORT_RPWM_A |= (1<<PIN_RPWM_A);
 	}
 	else if (OCR0B != 0)
 	{
-		PORT_RPWM &= ~(1<<PIN_RPWM);
-		PORT_LPWM |= (1<<PIN_LPWM);
+		PORT_RPWM_A &= ~(1<<PIN_RPWM_A);
+		PORT_LPWM_A |= (1<<PIN_LPWM_A);
 	}
 }
 
@@ -32,7 +32,7 @@ ISR(TIMER0_COMPA_vect)
 {
 	if (OCR0A != 255)
 	{
-		PORT_RPWM &= ~(1<<PIN_RPWM);
+		PORT_RPWM_A &= ~(1<<PIN_RPWM_A);
 	}
 }
 
@@ -40,19 +40,19 @@ ISR(TIMER0_COMPB_vect)
 {
 	if (OCR0B != 255)
 	{
-		PORT_LPWM &= ~(1<<PIN_LPWM);
+		PORT_LPWM_A &= ~(1<<PIN_LPWM_A);
 	}
 }
 
-void init_h_bridge(void)
+void init_h_bridge_a(void)
 {
 	// Config pins as output
-	DDR_RPWM |= (1<<PIN_RPWM);
-	DDR_LPWM |= (1<<PIN_LPWM);
+	DDR_RPWM_A |= (1<<PIN_RPWM_A);
+	DDR_LPWM_A |= (1<<PIN_LPWM_A);
 
 	// Output low
-	PORT_RPWM &= ~(1<<PIN_RPWM);
-	PORT_LPWM &= ~(1<<PIN_LPWM);
+	PORT_RPWM_A &= ~(1<<PIN_RPWM_A);
+	PORT_LPWM_A &= ~(1<<PIN_LPWM_A);
 
 	// Use mode 0, clkdiv = 64
 	TCCR0A = 0;
@@ -68,7 +68,7 @@ void init_h_bridge(void)
 	sei();
 }
 
-void h_bridge_set_percentage(signed char percentage)
+void h_bridge_set_percentage_a(signed char percentage)
 {
 	if (percentage >= -100 && percentage <= 100)
 	{

@@ -1,0 +1,24 @@
+# depslib dependency file v1.0
+1653470401 source:c:\users\tldeb\desktop\program\agv_rijden\fuse.c
+	<avr/io.h>
+
+1653472649 source:c:\users\tldeb\desktop\program\agv_rijden\main.c
+	<avr/io.h>
+	"h_bridge_a.h"
+	"h_bridge_b.h"
+	<util/delay.h>
+
+1653826493 source:c:\users\tldeb\desktop\program\agv_rijden\h_bridge_a.c
+	<avr/io.h>
+	<avr/interrupt.h>
+	"h_bridge_a.h"
+
+1653826493 c:\users\tldeb\desktop\program\agv_rijden\h_bridge_a.h
+
+1653826493 source:c:\users\tldeb\desktop\program\agv_rijden\h_bridge_b.c
+	<avr/io.h>
+	<avr/interrupt.h>
+	"h_bridge_b.h"
+
+1653826493 c:\users\tldeb\desktop\program\agv_rijden\h_bridge_b.h
+
