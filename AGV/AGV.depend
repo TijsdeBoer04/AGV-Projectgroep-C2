@@ -1,0 +1,25 @@
+# depslib dependency file v1.0
+1654097432 source:c:\users\jobva\onedrive\documenten\haagse hogeschool\blok 3\agv\fuse.c
+	<avr/io.h>
+
+1654105332 source:c:\users\jobva\onedrive\documenten\haagse hogeschool\blok 3\agv\h_bridge_a.c
+	<avr/io.h>
+	<avr/interrupt.h>
+	"h_bridge_a.h"
+
+1654105332 c:\users\jobva\onedrive\documenten\haagse hogeschool\blok 3\agv\h_bridge_a.h
+
+1654157763 source:c:\users\jobva\onedrive\documenten\haagse hogeschool\blok 3\agv\h_bridge_b.c
+	<avr/io.h>
+	<avr/interrupt.h>
+	"h_bridge_b.h"
+
+1654105332 c:\users\jobva\onedrive\documenten\haagse hogeschool\blok 3\agv\h_bridge_b.h
+
+1654244086 source:c:\users\jobva\onedrive\documenten\haagse hogeschool\blok 3\agv\main.c
+	<avr/io.h>
+	<avr/interrupt.h>
+	<avr/delay.h>
+	"h_bridge_a.h"
+	"h_bridge_b.h"
+
