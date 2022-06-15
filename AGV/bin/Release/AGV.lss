@@ -3,13 +3,13 @@ bin\Release\AGV.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000002  00800200  00000512  000005c6  2**0
+  0 .data         00000002  00800200  000004fa  000005ae  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000512  00000000  00000000  000000b4  2**1
+  1 .text         000004fa  00000000  00000000  000000b4  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000002  00800202  00800202  000005c8  2**0
+  2 .bss          00000002  00800202  00800202  000005b0  2**0
                   ALLOC
-  3 .fuse         00000003  00820000  00820000  000005c8  2**0
+  3 .fuse         00000003  00820000  00820000  000005b0  2**0
                   CONTENTS, ALLOC, LOAD, DATA
 
 Disassembly of section .text:
@@ -87,8 +87,8 @@ Disassembly of section .text:
   f4:	12 e0       	ldi	r17, 0x02	; 2
   f6:	a0 e0       	ldi	r26, 0x00	; 0
   f8:	b2 e0       	ldi	r27, 0x02	; 2
-  fa:	e2 e1       	ldi	r30, 0x12	; 18
-  fc:	f5 e0       	ldi	r31, 0x05	; 5
+  fa:	ea ef       	ldi	r30, 0xFA	; 250
+  fc:	f4 e0       	ldi	r31, 0x04	; 4
   fe:	00 e0       	ldi	r16, 0x00	; 0
  100:	0b bf       	out	0x3b, r16	; 59
  102:	02 c0       	rjmp	.+4      	; 0x108 <__do_copy_data+0x14>
@@ -111,8 +111,8 @@ Disassembly of section .text:
  118:	a4 30       	cpi	r26, 0x04	; 4
  11a:	b1 07       	cpc	r27, r17
  11c:	e1 f7       	brne	.-8      	; 0x116 <.do_clear_bss_loop>
- 11e:	0e 94 4b 02 	call	0x496	; 0x496 <main>
- 122:	0c 94 87 02 	jmp	0x50e	; 0x50e <_exit>
+ 11e:	0e 94 3f 02 	call	0x47e	; 0x47e <main>
+ 122:	0c 94 7b 02 	jmp	0x4f6	; 0x4f6 <_exit>
 
 00000126 <__bad_interrupt>:
  126:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -226,7 +226,7 @@ Disassembly of section .text:
  1ee:	11 24       	eor	r1, r1
  1f0:	64 e6       	ldi	r22, 0x64	; 100
  1f2:	70 e0       	ldi	r23, 0x00	; 0
- 1f4:	0e 94 60 02 	call	0x4c0	; 0x4c0 <__divmodhi4>
+ 1f4:	0e 94 54 02 	call	0x4a8	; 0x4a8 <__divmodhi4>
  1f8:	67 bd       	out	0x27, r22	; 39
  1fa:	08 95       	ret
  1fc:	17 bc       	out	0x27, r1	; 39
@@ -242,7 +242,7 @@ Disassembly of section .text:
  210:	11 24       	eor	r1, r1
  212:	6c e9       	ldi	r22, 0x9C	; 156
  214:	7f ef       	ldi	r23, 0xFF	; 255
- 216:	0e 94 60 02 	call	0x4c0	; 0x4c0 <__divmodhi4>
+ 216:	0e 94 54 02 	call	0x4a8	; 0x4a8 <__divmodhi4>
  21a:	68 bd       	out	0x28, r22	; 40
  21c:	08 95       	ret
 
@@ -367,7 +367,7 @@ Disassembly of section .text:
  320:	11 24       	eor	r1, r1
  322:	64 e6       	ldi	r22, 0x64	; 100
  324:	70 e0       	ldi	r23, 0x00	; 0
- 326:	0e 94 60 02 	call	0x4c0	; 0x4c0 <__divmodhi4>
+ 326:	0e 94 54 02 	call	0x4a8	; 0x4a8 <__divmodhi4>
  32a:	60 93 b3 00 	sts	0x00B3, r22
  32e:	08 95       	ret
  330:	10 92 b3 00 	sts	0x00B3, r1
@@ -383,7 +383,7 @@ Disassembly of section .text:
  346:	11 24       	eor	r1, r1
  348:	6c e9       	ldi	r22, 0x9C	; 156
  34a:	7f ef       	ldi	r23, 0xFF	; 255
- 34c:	0e 94 60 02 	call	0x4c0	; 0x4c0 <__divmodhi4>
+ 34c:	0e 94 54 02 	call	0x4a8	; 0x4a8 <__divmodhi4>
  350:	60 93 b4 00 	sts	0x00B4, r22
  354:	08 95       	ret
 
@@ -413,200 +413,190 @@ Disassembly of section .text:
 00000378 <zoemer_beep>:
  378:	08 95       	ret
 
-0000037a <bocht_detecie>:
- 37a:	0f 93       	push	r16
- 37c:	1f 93       	push	r17
- 37e:	cf 93       	push	r28
- 380:	df 93       	push	r29
- 382:	35 99       	sbic	0x06, 5	; 6
- 384:	47 c0       	rjmp	.+142    	; 0x414 <bocht_detecie+0x9a>
- 386:	80 91 00 02 	lds	r24, 0x0200
- 38a:	90 91 01 02 	lds	r25, 0x0201
- 38e:	62 e0       	ldi	r22, 0x02	; 2
- 390:	70 e0       	ldi	r23, 0x00	; 0
- 392:	0e 94 60 02 	call	0x4c0	; 0x4c0 <__divmodhi4>
- 396:	00 97       	sbiw	r24, 0x00	; 0
- 398:	19 f0       	breq	.+6      	; 0x3a0 <bocht_detecie+0x26>
- 39a:	01 97       	sbiw	r24, 0x01	; 1
- 39c:	31 f5       	brne	.+76     	; 0x3ea <bocht_detecie+0x70>
- 39e:	13 c0       	rjmp	.+38     	; 0x3c6 <bocht_detecie+0x4c>
- 3a0:	c0 e0       	ldi	r28, 0x00	; 0
- 3a2:	d0 e0       	ldi	r29, 0x00	; 0
- 3a4:	00 ea       	ldi	r16, 0xA0	; 160
- 3a6:	1f e0       	ldi	r17, 0x0F	; 15
- 3a8:	84 e6       	ldi	r24, 0x64	; 100
- 3aa:	0e 94 e3 00 	call	0x1c6	; 0x1c6 <h_bridge_set_percentage_a>
- 3ae:	8e e1       	ldi	r24, 0x1E	; 30
- 3b0:	0e 94 7b 01 	call	0x2f6	; 0x2f6 <h_bridge_set_percentage_b>
- 3b4:	c8 01       	movw	r24, r16
- 3b6:	01 97       	sbiw	r24, 0x01	; 1
- 3b8:	f1 f7       	brne	.-4      	; 0x3b6 <bocht_detecie+0x3c>
- 3ba:	21 96       	adiw	r28, 0x01	; 1
- 3bc:	85 e0       	ldi	r24, 0x05	; 5
- 3be:	cc 3d       	cpi	r28, 0xDC	; 220
- 3c0:	d8 07       	cpc	r29, r24
- 3c2:	91 f7       	brne	.-28     	; 0x3a8 <bocht_detecie+0x2e>
- 3c4:	12 c0       	rjmp	.+36     	; 0x3ea <bocht_detecie+0x70>
- 3c6:	c0 e0       	ldi	r28, 0x00	; 0
- 3c8:	d0 e0       	ldi	r29, 0x00	; 0
- 3ca:	00 ea       	ldi	r16, 0xA0	; 160
- 3cc:	1f e0       	ldi	r17, 0x0F	; 15
- 3ce:	8e e1       	ldi	r24, 0x1E	; 30
- 3d0:	0e 94 e3 00 	call	0x1c6	; 0x1c6 <h_bridge_set_percentage_a>
- 3d4:	84 e6       	ldi	r24, 0x64	; 100
- 3d6:	0e 94 7b 01 	call	0x2f6	; 0x2f6 <h_bridge_set_percentage_b>
- 3da:	c8 01       	movw	r24, r16
- 3dc:	01 97       	sbiw	r24, 0x01	; 1
- 3de:	f1 f7       	brne	.-4      	; 0x3dc <bocht_detecie+0x62>
- 3e0:	21 96       	adiw	r28, 0x01	; 1
- 3e2:	85 e0       	ldi	r24, 0x05	; 5
- 3e4:	cc 3d       	cpi	r28, 0xDC	; 220
- 3e6:	d8 07       	cpc	r29, r24
- 3e8:	91 f7       	brne	.-28     	; 0x3ce <bocht_detecie+0x54>
- 3ea:	80 91 02 02 	lds	r24, 0x0202
- 3ee:	90 91 03 02 	lds	r25, 0x0203
- 3f2:	89 2b       	or	r24, r25
- 3f4:	79 f4       	brne	.+30     	; 0x414 <bocht_detecie+0x9a>
- 3f6:	81 e0       	ldi	r24, 0x01	; 1
- 3f8:	90 e0       	ldi	r25, 0x00	; 0
- 3fa:	90 93 03 02 	sts	0x0203, r25
- 3fe:	80 93 02 02 	sts	0x0202, r24
- 402:	80 91 00 02 	lds	r24, 0x0200
- 406:	90 91 01 02 	lds	r25, 0x0201
- 40a:	01 96       	adiw	r24, 0x01	; 1
- 40c:	90 93 01 02 	sts	0x0201, r25
- 410:	80 93 00 02 	sts	0x0200, r24
- 414:	35 9b       	sbis	0x06, 5	; 6
- 416:	04 c0       	rjmp	.+8      	; 0x420 <bocht_detecie+0xa6>
- 418:	10 92 03 02 	sts	0x0203, r1
- 41c:	10 92 02 02 	sts	0x0202, r1
- 420:	df 91       	pop	r29
- 422:	cf 91       	pop	r28
- 424:	1f 91       	pop	r17
- 426:	0f 91       	pop	r16
- 428:	08 95       	ret
+0000037a <boom_detectie>:
+ 37a:	80 91 09 01 	lds	r24, 0x0109
+ 37e:	96 b1       	in	r25, 0x06	; 6
+ 380:	85 ff       	sbrs	r24, 5
+ 382:	02 c0       	rjmp	.+4      	; 0x388 <boom_detectie+0xe>
+ 384:	91 fd       	sbrc	r25, 1
+ 386:	23 c0       	rjmp	.+70     	; 0x3ce <boom_detectie+0x54>
+ 388:	80 e0       	ldi	r24, 0x00	; 0
+ 38a:	0e 94 e3 00 	call	0x1c6	; 0x1c6 <h_bridge_set_percentage_a>
+ 38e:	80 e0       	ldi	r24, 0x00	; 0
+ 390:	0e 94 7b 01 	call	0x2f6	; 0x2f6 <h_bridge_set_percentage_b>
+ 394:	80 e0       	ldi	r24, 0x00	; 0
+ 396:	90 e0       	ldi	r25, 0x00	; 0
+ 398:	20 e2       	ldi	r18, 0x20	; 32
+ 39a:	3e e4       	ldi	r19, 0x4E	; 78
+ 39c:	f9 01       	movw	r30, r18
+ 39e:	31 97       	sbiw	r30, 0x01	; 1
+ 3a0:	f1 f7       	brne	.-4      	; 0x39e <boom_detectie+0x24>
+ 3a2:	01 96       	adiw	r24, 0x01	; 1
+ 3a4:	84 36       	cpi	r24, 0x64	; 100
+ 3a6:	91 05       	cpc	r25, r1
+ 3a8:	c9 f7       	brne	.-14     	; 0x39c <boom_detectie+0x22>
+ 3aa:	84 e6       	ldi	r24, 0x64	; 100
+ 3ac:	0e 94 e3 00 	call	0x1c6	; 0x1c6 <h_bridge_set_percentage_a>
+ 3b0:	84 e6       	ldi	r24, 0x64	; 100
+ 3b2:	0e 94 7b 01 	call	0x2f6	; 0x2f6 <h_bridge_set_percentage_b>
+ 3b6:	80 e0       	ldi	r24, 0x00	; 0
+ 3b8:	90 e0       	ldi	r25, 0x00	; 0
+ 3ba:	20 e2       	ldi	r18, 0x20	; 32
+ 3bc:	3e e4       	ldi	r19, 0x4E	; 78
+ 3be:	f9 01       	movw	r30, r18
+ 3c0:	31 97       	sbiw	r30, 0x01	; 1
+ 3c2:	f1 f7       	brne	.-4      	; 0x3c0 <boom_detectie+0x46>
+ 3c4:	01 96       	adiw	r24, 0x01	; 1
+ 3c6:	41 e0       	ldi	r20, 0x01	; 1
+ 3c8:	8c 32       	cpi	r24, 0x2C	; 44
+ 3ca:	94 07       	cpc	r25, r20
+ 3cc:	c1 f7       	brne	.-16     	; 0x3be <boom_detectie+0x44>
+ 3ce:	08 95       	ret
 
-0000042a <boom_detectie>:
- 42a:	80 91 09 01 	lds	r24, 0x0109
- 42e:	96 b1       	in	r25, 0x06	; 6
- 430:	85 ff       	sbrs	r24, 5
- 432:	02 c0       	rjmp	.+4      	; 0x438 <boom_detectie+0xe>
- 434:	91 fd       	sbrc	r25, 1
- 436:	23 c0       	rjmp	.+70     	; 0x47e <boom_detectie+0x54>
- 438:	80 e0       	ldi	r24, 0x00	; 0
- 43a:	0e 94 e3 00 	call	0x1c6	; 0x1c6 <h_bridge_set_percentage_a>
- 43e:	80 e0       	ldi	r24, 0x00	; 0
- 440:	0e 94 7b 01 	call	0x2f6	; 0x2f6 <h_bridge_set_percentage_b>
- 444:	80 e0       	ldi	r24, 0x00	; 0
- 446:	90 e0       	ldi	r25, 0x00	; 0
- 448:	20 e2       	ldi	r18, 0x20	; 32
- 44a:	3e e4       	ldi	r19, 0x4E	; 78
- 44c:	f9 01       	movw	r30, r18
- 44e:	31 97       	sbiw	r30, 0x01	; 1
- 450:	f1 f7       	brne	.-4      	; 0x44e <boom_detectie+0x24>
- 452:	01 96       	adiw	r24, 0x01	; 1
- 454:	84 36       	cpi	r24, 0x64	; 100
- 456:	91 05       	cpc	r25, r1
- 458:	c9 f7       	brne	.-14     	; 0x44c <boom_detectie+0x22>
- 45a:	84 e6       	ldi	r24, 0x64	; 100
- 45c:	0e 94 e3 00 	call	0x1c6	; 0x1c6 <h_bridge_set_percentage_a>
- 460:	84 e6       	ldi	r24, 0x64	; 100
- 462:	0e 94 7b 01 	call	0x2f6	; 0x2f6 <h_bridge_set_percentage_b>
- 466:	80 e0       	ldi	r24, 0x00	; 0
- 468:	90 e0       	ldi	r25, 0x00	; 0
- 46a:	20 e2       	ldi	r18, 0x20	; 32
- 46c:	3e e4       	ldi	r19, 0x4E	; 78
- 46e:	f9 01       	movw	r30, r18
- 470:	31 97       	sbiw	r30, 0x01	; 1
- 472:	f1 f7       	brne	.-4      	; 0x470 <boom_detectie+0x46>
- 474:	01 96       	adiw	r24, 0x01	; 1
- 476:	41 e0       	ldi	r20, 0x01	; 1
- 478:	8c 32       	cpi	r24, 0x2C	; 44
- 47a:	94 07       	cpc	r25, r20
- 47c:	c1 f7       	brne	.-16     	; 0x46e <boom_detectie+0x44>
- 47e:	08 95       	ret
+000003d0 <bocht_maken_links>:
+ 3d0:	cf 93       	push	r28
+ 3d2:	df 93       	push	r29
+ 3d4:	c0 ea       	ldi	r28, 0xA0	; 160
+ 3d6:	df e0       	ldi	r29, 0x0F	; 15
+ 3d8:	8e e1       	ldi	r24, 0x1E	; 30
+ 3da:	0e 94 e3 00 	call	0x1c6	; 0x1c6 <h_bridge_set_percentage_a>
+ 3de:	84 e6       	ldi	r24, 0x64	; 100
+ 3e0:	0e 94 7b 01 	call	0x2f6	; 0x2f6 <h_bridge_set_percentage_b>
+ 3e4:	ce 01       	movw	r24, r28
+ 3e6:	01 97       	sbiw	r24, 0x01	; 1
+ 3e8:	f1 f7       	brne	.-4      	; 0x3e6 <bocht_maken_links+0x16>
+ 3ea:	f6 cf       	rjmp	.-20     	; 0x3d8 <bocht_maken_links+0x8>
 
-00000480 <init>:
- 480:	0e 94 ab 01 	call	0x356	; 0x356 <init_ir>
- 484:	0e 94 b5 01 	call	0x36a	; 0x36a <init_overige_sensor>
- 488:	0e 98       	cbi	0x01, 6	; 1
- 48a:	0a 98       	cbi	0x01, 2	; 1
- 48c:	0e 94 d5 00 	call	0x1aa	; 0x1aa <init_h_bridge_a>
- 490:	0e 94 65 01 	call	0x2ca	; 0x2ca <init_h_bridge_b>
- 494:	08 95       	ret
+000003ec <bocht_maken_rechts>:
+ 3ec:	cf 93       	push	r28
+ 3ee:	df 93       	push	r29
+ 3f0:	c0 ea       	ldi	r28, 0xA0	; 160
+ 3f2:	df e0       	ldi	r29, 0x0F	; 15
+ 3f4:	84 e6       	ldi	r24, 0x64	; 100
+ 3f6:	0e 94 e3 00 	call	0x1c6	; 0x1c6 <h_bridge_set_percentage_a>
+ 3fa:	8e e1       	ldi	r24, 0x1E	; 30
+ 3fc:	0e 94 7b 01 	call	0x2f6	; 0x2f6 <h_bridge_set_percentage_b>
+ 400:	ce 01       	movw	r24, r28
+ 402:	01 97       	sbiw	r24, 0x01	; 1
+ 404:	f1 f7       	brne	.-4      	; 0x402 <bocht_maken_rechts+0x16>
+ 406:	f6 cf       	rjmp	.-20     	; 0x3f4 <bocht_maken_rechts+0x8>
 
-00000496 <main>:
- 496:	0e 94 40 02 	call	0x480	; 0x480 <init>
- 49a:	80 91 09 01 	lds	r24, 0x0109
- 49e:	85 ff       	sbrs	r24, 5
- 4a0:	0a c0       	rjmp	.+20     	; 0x4b6 <main+0x20>
- 4a2:	31 9b       	sbis	0x06, 1	; 6
- 4a4:	08 c0       	rjmp	.+16     	; 0x4b6 <main+0x20>
- 4a6:	35 9b       	sbis	0x06, 5	; 6
- 4a8:	06 c0       	rjmp	.+12     	; 0x4b6 <main+0x20>
- 4aa:	84 e6       	ldi	r24, 0x64	; 100
- 4ac:	0e 94 e3 00 	call	0x1c6	; 0x1c6 <h_bridge_set_percentage_a>
- 4b0:	84 e6       	ldi	r24, 0x64	; 100
- 4b2:	0e 94 7b 01 	call	0x2f6	; 0x2f6 <h_bridge_set_percentage_b>
- 4b6:	0e 94 15 02 	call	0x42a	; 0x42a <boom_detectie>
- 4ba:	0e 94 bd 01 	call	0x37a	; 0x37a <bocht_detecie>
- 4be:	ed cf       	rjmp	.-38     	; 0x49a <main+0x4>
+00000408 <bocht_detecie>:
+ 408:	35 99       	sbic	0x06, 5	; 6
+ 40a:	27 c0       	rjmp	.+78     	; 0x45a <bocht_detecie+0x52>
+ 40c:	80 91 00 02 	lds	r24, 0x0200
+ 410:	90 91 01 02 	lds	r25, 0x0201
+ 414:	62 e0       	ldi	r22, 0x02	; 2
+ 416:	70 e0       	ldi	r23, 0x00	; 0
+ 418:	0e 94 54 02 	call	0x4a8	; 0x4a8 <__divmodhi4>
+ 41c:	00 97       	sbiw	r24, 0x00	; 0
+ 41e:	19 f0       	breq	.+6      	; 0x426 <bocht_detecie+0x1e>
+ 420:	01 97       	sbiw	r24, 0x01	; 1
+ 422:	31 f4       	brne	.+12     	; 0x430 <bocht_detecie+0x28>
+ 424:	03 c0       	rjmp	.+6      	; 0x42c <bocht_detecie+0x24>
+ 426:	0e 94 f6 01 	call	0x3ec	; 0x3ec <bocht_maken_rechts>
+ 42a:	02 c0       	rjmp	.+4      	; 0x430 <bocht_detecie+0x28>
+ 42c:	0e 94 e8 01 	call	0x3d0	; 0x3d0 <bocht_maken_links>
+ 430:	80 91 02 02 	lds	r24, 0x0202
+ 434:	90 91 03 02 	lds	r25, 0x0203
+ 438:	89 2b       	or	r24, r25
+ 43a:	79 f4       	brne	.+30     	; 0x45a <bocht_detecie+0x52>
+ 43c:	81 e0       	ldi	r24, 0x01	; 1
+ 43e:	90 e0       	ldi	r25, 0x00	; 0
+ 440:	90 93 03 02 	sts	0x0203, r25
+ 444:	80 93 02 02 	sts	0x0202, r24
+ 448:	80 91 00 02 	lds	r24, 0x0200
+ 44c:	90 91 01 02 	lds	r25, 0x0201
+ 450:	01 96       	adiw	r24, 0x01	; 1
+ 452:	90 93 01 02 	sts	0x0201, r25
+ 456:	80 93 00 02 	sts	0x0200, r24
+ 45a:	35 9b       	sbis	0x06, 5	; 6
+ 45c:	04 c0       	rjmp	.+8      	; 0x466 <bocht_detecie+0x5e>
+ 45e:	10 92 03 02 	sts	0x0203, r1
+ 462:	10 92 02 02 	sts	0x0202, r1
+ 466:	08 95       	ret
 
-000004c0 <__divmodhi4>:
- 4c0:	97 fb       	bst	r25, 7
- 4c2:	09 2e       	mov	r0, r25
- 4c4:	07 26       	eor	r0, r23
- 4c6:	0a d0       	rcall	.+20     	; 0x4dc <__divmodhi4_neg1>
- 4c8:	77 fd       	sbrc	r23, 7
- 4ca:	04 d0       	rcall	.+8      	; 0x4d4 <__divmodhi4_neg2>
- 4cc:	0c d0       	rcall	.+24     	; 0x4e6 <__udivmodhi4>
- 4ce:	06 d0       	rcall	.+12     	; 0x4dc <__divmodhi4_neg1>
- 4d0:	00 20       	and	r0, r0
- 4d2:	1a f4       	brpl	.+6      	; 0x4da <__divmodhi4_exit>
+00000468 <init>:
+ 468:	0e 94 ab 01 	call	0x356	; 0x356 <init_ir>
+ 46c:	0e 94 b5 01 	call	0x36a	; 0x36a <init_overige_sensor>
+ 470:	0e 98       	cbi	0x01, 6	; 1
+ 472:	0a 98       	cbi	0x01, 2	; 1
+ 474:	0e 94 d5 00 	call	0x1aa	; 0x1aa <init_h_bridge_a>
+ 478:	0e 94 65 01 	call	0x2ca	; 0x2ca <init_h_bridge_b>
+ 47c:	08 95       	ret
 
-000004d4 <__divmodhi4_neg2>:
- 4d4:	70 95       	com	r23
- 4d6:	61 95       	neg	r22
- 4d8:	7f 4f       	sbci	r23, 0xFF	; 255
+0000047e <main>:
+ 47e:	0e 94 34 02 	call	0x468	; 0x468 <init>
+ 482:	80 91 09 01 	lds	r24, 0x0109
+ 486:	85 ff       	sbrs	r24, 5
+ 488:	0a c0       	rjmp	.+20     	; 0x49e <main+0x20>
+ 48a:	31 9b       	sbis	0x06, 1	; 6
+ 48c:	08 c0       	rjmp	.+16     	; 0x49e <main+0x20>
+ 48e:	35 9b       	sbis	0x06, 5	; 6
+ 490:	06 c0       	rjmp	.+12     	; 0x49e <main+0x20>
+ 492:	84 e6       	ldi	r24, 0x64	; 100
+ 494:	0e 94 e3 00 	call	0x1c6	; 0x1c6 <h_bridge_set_percentage_a>
+ 498:	84 e6       	ldi	r24, 0x64	; 100
+ 49a:	0e 94 7b 01 	call	0x2f6	; 0x2f6 <h_bridge_set_percentage_b>
+ 49e:	0e 94 bd 01 	call	0x37a	; 0x37a <boom_detectie>
+ 4a2:	0e 94 04 02 	call	0x408	; 0x408 <bocht_detecie>
+ 4a6:	ed cf       	rjmp	.-38     	; 0x482 <main+0x4>
 
-000004da <__divmodhi4_exit>:
- 4da:	08 95       	ret
+000004a8 <__divmodhi4>:
+ 4a8:	97 fb       	bst	r25, 7
+ 4aa:	09 2e       	mov	r0, r25
+ 4ac:	07 26       	eor	r0, r23
+ 4ae:	0a d0       	rcall	.+20     	; 0x4c4 <__divmodhi4_neg1>
+ 4b0:	77 fd       	sbrc	r23, 7
+ 4b2:	04 d0       	rcall	.+8      	; 0x4bc <__divmodhi4_neg2>
+ 4b4:	0c d0       	rcall	.+24     	; 0x4ce <__udivmodhi4>
+ 4b6:	06 d0       	rcall	.+12     	; 0x4c4 <__divmodhi4_neg1>
+ 4b8:	00 20       	and	r0, r0
+ 4ba:	1a f4       	brpl	.+6      	; 0x4c2 <__divmodhi4_exit>
 
-000004dc <__divmodhi4_neg1>:
- 4dc:	f6 f7       	brtc	.-4      	; 0x4da <__divmodhi4_exit>
- 4de:	90 95       	com	r25
- 4e0:	81 95       	neg	r24
- 4e2:	9f 4f       	sbci	r25, 0xFF	; 255
- 4e4:	08 95       	ret
+000004bc <__divmodhi4_neg2>:
+ 4bc:	70 95       	com	r23
+ 4be:	61 95       	neg	r22
+ 4c0:	7f 4f       	sbci	r23, 0xFF	; 255
 
-000004e6 <__udivmodhi4>:
- 4e6:	aa 1b       	sub	r26, r26
- 4e8:	bb 1b       	sub	r27, r27
- 4ea:	51 e1       	ldi	r21, 0x11	; 17
- 4ec:	07 c0       	rjmp	.+14     	; 0x4fc <__udivmodhi4_ep>
+000004c2 <__divmodhi4_exit>:
+ 4c2:	08 95       	ret
 
-000004ee <__udivmodhi4_loop>:
- 4ee:	aa 1f       	adc	r26, r26
- 4f0:	bb 1f       	adc	r27, r27
- 4f2:	a6 17       	cp	r26, r22
- 4f4:	b7 07       	cpc	r27, r23
- 4f6:	10 f0       	brcs	.+4      	; 0x4fc <__udivmodhi4_ep>
- 4f8:	a6 1b       	sub	r26, r22
- 4fa:	b7 0b       	sbc	r27, r23
+000004c4 <__divmodhi4_neg1>:
+ 4c4:	f6 f7       	brtc	.-4      	; 0x4c2 <__divmodhi4_exit>
+ 4c6:	90 95       	com	r25
+ 4c8:	81 95       	neg	r24
+ 4ca:	9f 4f       	sbci	r25, 0xFF	; 255
+ 4cc:	08 95       	ret
 
-000004fc <__udivmodhi4_ep>:
- 4fc:	88 1f       	adc	r24, r24
- 4fe:	99 1f       	adc	r25, r25
- 500:	5a 95       	dec	r21
- 502:	a9 f7       	brne	.-22     	; 0x4ee <__udivmodhi4_loop>
- 504:	80 95       	com	r24
- 506:	90 95       	com	r25
- 508:	bc 01       	movw	r22, r24
- 50a:	cd 01       	movw	r24, r26
- 50c:	08 95       	ret
+000004ce <__udivmodhi4>:
+ 4ce:	aa 1b       	sub	r26, r26
+ 4d0:	bb 1b       	sub	r27, r27
+ 4d2:	51 e1       	ldi	r21, 0x11	; 17
+ 4d4:	07 c0       	rjmp	.+14     	; 0x4e4 <__udivmodhi4_ep>
 
-0000050e <_exit>:
- 50e:	f8 94       	cli
+000004d6 <__udivmodhi4_loop>:
+ 4d6:	aa 1f       	adc	r26, r26
+ 4d8:	bb 1f       	adc	r27, r27
+ 4da:	a6 17       	cp	r26, r22
+ 4dc:	b7 07       	cpc	r27, r23
+ 4de:	10 f0       	brcs	.+4      	; 0x4e4 <__udivmodhi4_ep>
+ 4e0:	a6 1b       	sub	r26, r22
+ 4e2:	b7 0b       	sbc	r27, r23
 
-00000510 <__stop_program>:
- 510:	ff cf       	rjmp	.-2      	; 0x510 <__stop_program>
+000004e4 <__udivmodhi4_ep>:
+ 4e4:	88 1f       	adc	r24, r24
+ 4e6:	99 1f       	adc	r25, r25
+ 4e8:	5a 95       	dec	r21
+ 4ea:	a9 f7       	brne	.-22     	; 0x4d6 <__udivmodhi4_loop>
+ 4ec:	80 95       	com	r24
+ 4ee:	90 95       	com	r25
+ 4f0:	bc 01       	movw	r22, r24
+ 4f2:	cd 01       	movw	r24, r26
+ 4f4:	08 95       	ret
+
+000004f6 <_exit>:
+ 4f6:	f8 94       	cli
+
+000004f8 <__stop_program>:
+ 4f8:	ff cf       	rjmp	.-2      	; 0x4f8 <__stop_program>
