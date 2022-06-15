@@ -59,7 +59,6 @@ void init(void){
     init_niet_sensor();
     init_h_bridge_a();
     init_h_bridge_b();
-
 }
 
 int main(void)
@@ -69,8 +68,8 @@ int main(void)
     enum AGV_Toestand huidige_toestand = ruststand;
 while(1){
 
-        h_bridge_set_percentage_a(100);
-        h_bridge_set_percentage_b(100);
+        h_bridge_set_percentage_a(90);
+        h_bridge_set_percentage_b(90);
     /*switch(huidige_toestand){
 
         case noodtoestand:
