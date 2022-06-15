@@ -23,20 +23,3 @@
 	"h_bridge_a.h"
 	"h_bridge_b.h"
 
-1655280163 source:c:\users\tldeb\documents\github\agv-projectgroep-c2\agv\fuse.c
-	<avr/io.h>
-
-1655280163 source:c:\users\tldeb\documents\github\agv-projectgroep-c2\agv\h_bridge_a.c
-	<avr/io.h>
-	<avr/interrupt.h>
-	"h_bridge_a.h"
-
-1655280163 c:\users\tldeb\documents\github\agv-projectgroep-c2\agv\h_bridge_a.h
-
-1655280163 source:c:\users\tldeb\documents\github\agv-projectgroep-c2\agv\h_bridge_b.c
-	<avr/io.h>
-	<avr/interrupt.h>
-	"h_bridge_b.h"
-
-1655280163 c:\users\tldeb\documents\github\agv-projectgroep-c2\agv\h_bridge_b.h
-

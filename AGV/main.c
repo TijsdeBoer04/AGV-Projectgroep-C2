@@ -4,36 +4,29 @@
 #include "h_bridge_a.h"
 #include "h_bridge_b.h"
 
-#define TrigPinLinks PL1
-#define TrigPinRechts PL3
-#define EchoPinLinks PB1
-#define EchoPinRechts PB3
-
-#define IrPinLinks PC1
-#define IrPinRechts PC5
+#define IrPinLinksVoor PC1
+#define IrPinRechtsVoor PC5
 #define IrPinVoor PL5
+#define IrPinLinksAchter PB1
+#define IrPinRechtsAchter PB3
 
 #define PirPin PG1
 #define LdrPinLinks PF0
 #define LdrPinRechts PF2
 
+
 #define ModusKnop PA2
 #define Noodstop PA6
-#define Led1
-#define Led2
-#define Led3
-#define Led4
+#define Noodstop PA6
+#define BuzzerPin
 
-void init_ultrasoon(void){      //De trig en echo pin van de ultrasoon worden hier geinitialiseerd
-    DDRL &= ~(1 << TrigPinLinks);
-    DDRB &= ~(1 << EchoPinLinks);
-    DDRL &= ~(1 << TrigPinRechts);
-    DDRB &= ~(1 << EchoPinRechts);
-}
+
 
 void init_ir(void){            //Hier word de LDR geinitialiseerd
-    DDRC &= ~(1 << IrPinLinks);
-    DDRC &= ~(1 << IrPinRechts);
+    DDRC &= ~(1 << IrPinLinksVoor);
+    DDRB &= ~(1 << IrPinLinksAchter);
+    DDRC &= ~(1 << IrPinRechtsVoor);
+    DDRB &= ~(1 << IrPinRechtsAchter);
     DDRL &= ~(1 << IrPinVoor);
 }
 
@@ -46,19 +39,17 @@ void init_overige_sensor(void){ //Hier worden de PIR en LDR geinitialiseerd
 void init_niet_sensor(void){    //Hier wordt alles dat geen sensor is geinitialiseerd
     DDRA &= ~(1 << Noodstop);
     DDRA &= ~(1 << ModusKnop);
-  /*DDRx |= (1 << Led1);
-    DDRx |= (1 << Led2);
-    DDRx |= (1 << Led3);
-    DDRx |= (1 << Led4); */
+ //   DDRx |= (1 << BuzzerPin);
+
 }
 
 void init(void){
-    init_ultrasoon();
     init_ir();
     init_overige_sensor();
     init_niet_sensor();
     init_h_bridge_a();
     init_h_bridge_b();
+
 }
 
 int main(void)
@@ -68,9 +59,9 @@ int main(void)
     enum AGV_Toestand huidige_toestand = ruststand;
 while(1){
 
-        h_bridge_set_percentage_a(90);
-        h_bridge_set_percentage_b(90);
-    /*switch(huidige_toestand){
+        h_bridge_set_percentage_a(100);
+        h_bridge_set_percentage_b(100);
+    switch(huidige_toestand){
 
         case noodtoestand:
 
@@ -99,7 +90,7 @@ while(1){
             h_bridge_set_percentage_a(100);
             h_bridge_set_percentage_b(25);
             _delay_ms(5);
-            } */
+            }
 
 
             break;
@@ -107,6 +98,7 @@ while(1){
 
     }
  return 0;
+}
 }
 
 
