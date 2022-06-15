@@ -47,3 +47,20 @@
 	"h_bridge_a.h"
 	"h_bridge_b.h"
 
+1654097432 source:c:\users\jobva\onedrive\documenten\haagse hogeschool\blok 4\agv-projectgroep-c2\agv\fuse.c
+	<avr/io.h>
+
+1654105332 source:c:\users\jobva\onedrive\documenten\haagse hogeschool\blok 4\agv-projectgroep-c2\agv\h_bridge_a.c
+	<avr/io.h>
+	<avr/interrupt.h>
+	"h_bridge_a.h"
+
+1654105332 c:\users\jobva\onedrive\documenten\haagse hogeschool\blok 4\agv-projectgroep-c2\agv\h_bridge_a.h
+
+1654157763 source:c:\users\jobva\onedrive\documenten\haagse hogeschool\blok 4\agv-projectgroep-c2\agv\h_bridge_b.c
+	<avr/io.h>
+	<avr/interrupt.h>
+	"h_bridge_b.h"
+
+1654105332 c:\users\jobva\onedrive\documenten\haagse hogeschool\blok 4\agv-projectgroep-c2\agv\h_bridge_b.h
+

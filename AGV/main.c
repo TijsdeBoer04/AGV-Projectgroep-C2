@@ -44,6 +44,7 @@ void init_niet_sensor(void){    //Hier wordt alles dat geen sensor is geinitiali
 }
 
 void init(void){
+
     init_ir();
     init_overige_sensor();
     init_niet_sensor();
@@ -51,8 +52,8 @@ void init(void){
     init_h_bridge_b();
 
 }
-void zoemer_beep (void)
-{
+void zoemer_beep (void) {
+
     /*
     PORTx |= (1<<BuzzerPin);
     _delay_ms (10);
@@ -62,6 +63,24 @@ void zoemer_beep (void)
     _delay_ms (10);
     PORTx &= ~(1<<BuzzerPin);
     */
+}
+
+void bocht_maken_rechts {
+    for (int i=1;1<1500;i++){
+        h_bridge_set_percentage_a(MotorOn);
+        h_bridge_set_percentage_b(MotorBocht);
+        _delay_ms(1);
+    }
+
+}
+
+void bocht_maken_links {
+    for (int i=1;1<1500;i++){
+        h_bridge_set_percentage_a(MotorBocht);
+        h_bridge_set_percentage_b(MotorOn);
+        _delay_ms(1);
+    }
+
 }
 int main(void)
 {
@@ -104,6 +123,8 @@ while(1){
 
         case medewerker_volgen:
 
+
+
             break;
 
         case ruststand:
@@ -114,10 +135,6 @@ while(1){
 
         case test_toestand:
 
-
-            h_bridge_set_percentage_a(100);
-            h_bridge_set_percentage_b(100);
-            _delay_ms(3000);
             for (int i=1;1<500;i++){
             h_bridge_set_percentage_a(100);
             h_bridge_set_percentage_b(25);
