@@ -120,7 +120,7 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x3fc
+.text           0x00000000      0x442
  *(.vectors)
  .vectors       0x00000000       0xe4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr6/crtm2560.o
                 0x00000000                __vectors
@@ -238,29 +238,29 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a
                 0x0000026e                __vector_13
                 0x0000020e                __vector_15
                 0x00000298                __vector_14
- .text          0x00000346       0x64 obj\Release\main.o
-                0x00000374                init_niet_sensor
-                0x0000036c                init_overige_sensor
-                0x0000037a                init
-                0x00000394                main
-                0x00000346                init_ultrasoon
-                0x0000035c                init_ir
- .text          0x000003aa        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a(_divmodhi4.o)
- .text          0x000003aa        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a(_exit.o)
- .text          0x000003aa        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a(_udivmodhi4.o)
-                0x000003aa                . = ALIGN (0x2)
+ .text          0x00000346       0xaa obj\Release\main.o
+                0x00000362                init_niet_sensor
+                0x0000035a                init_overige_sensor
+                0x0000036a                init
+                0x00000380                main
+                0x00000368                zoemer_beep
+                0x00000346                init_ir
+ .text          0x000003f0        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a(_divmodhi4.o)
+ .text          0x000003f0        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a(_exit.o)
+ .text          0x000003f0        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a(_udivmodhi4.o)
+                0x000003f0                . = ALIGN (0x2)
  *(.text.*)
- .text.libgcc   0x000003aa       0x26 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a(_divmodhi4.o)
-                0x000003aa                __divmodhi4
-                0x000003aa                _div
- .text.libgcc   0x000003d0        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a(_exit.o)
- .text.libgcc   0x000003d0       0x28 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a(_udivmodhi4.o)
-                0x000003d0                __udivmodhi4
-                0x000003f8                . = ALIGN (0x2)
+ .text.libgcc   0x000003f0       0x26 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a(_divmodhi4.o)
+                0x000003f0                __divmodhi4
+                0x000003f0                _div
+ .text.libgcc   0x00000416        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a(_exit.o)
+ .text.libgcc   0x00000416       0x28 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a(_udivmodhi4.o)
+                0x00000416                __udivmodhi4
+                0x0000043e                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000003f8        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a(_exit.o)
-                0x000003f8                exit
-                0x000003f8                _exit
+ .fini9         0x0000043e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a(_exit.o)
+                0x0000043e                exit
+                0x0000043e                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -279,11 +279,11 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000003f8        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a(_exit.o)
+ .fini0         0x0000043e        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a(_exit.o)
  *(.fini0)
-                0x000003fc                _etext = .
+                0x00000442                _etext = .
 
-.data           0x00800200        0x0 load address 0x000003fc
+.data           0x00800200        0x0 load address 0x00000442
                 0x00800200                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800200        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr6/crtm2560.o
@@ -316,8 +316,8 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr6\libgcc.a
  *(.bss*)
  *(COMMON)
                 0x00800200                PROVIDE (__bss_end, .)
-                0x000003fc                __data_load_start = LOADADDR (.data)
-                0x000003fc                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00000442                __data_load_start = LOADADDR (.data)
+                0x00000442                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x00800200        0x0
                 0x00800200                PROVIDE (__noinit_start, .)
@@ -504,6 +504,6 @@ init_h_bridge_b                                   obj\Release\h_bridge_b.o
 init_ir                                           obj\Release\main.o
 init_niet_sensor                                  obj\Release\main.o
 init_overige_sensor                               obj\Release\main.o
-init_ultrasoon                                    obj\Release\main.o
 main                                              obj\Release\main.o
                                                   c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr6/crtm2560.o
+zoemer_beep                                       obj\Release\main.o

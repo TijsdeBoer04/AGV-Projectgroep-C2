@@ -4,36 +4,29 @@
 #include "h_bridge_a.h"
 #include "h_bridge_b.h"
 
-#define TrigPinLinks PL1
-#define TrigPinRechts PL3
-#define EchoPinLinks PB1
-#define EchoPinRechts PB3
-
-#define IrPinLinks PC1
-#define IrPinRechts PC5
-#define IrPinVoor PL5
+#define IrPinLinksVoor PL5
+#define IrPinRechtsVoor PC1
+#define IrPinVoor PC5
+#define IrPinLinksAchter PB1
+#define IrPinRechtsAchter PB3
 
 #define PirPin PG1
 #define LdrPinLinks PF0
 #define LdrPinRechts PF2
 
+
 #define ModusKnop PA2
 #define Noodstop PA6
-#define Led1
-#define Led2
-#define Led3
-#define Led4
+#define Noodstop PA6
+#define BuzzerPin
 
-void init_ultrasoon(void){      //De trig en echo pin van de ultrasoon worden hier geinitialiseerd
-    DDRL &= ~(1 << TrigPinLinks);
-    DDRB &= ~(1 << EchoPinLinks);
-    DDRL &= ~(1 << TrigPinRechts);
-    DDRB &= ~(1 << EchoPinRechts);
-}
+
 
 void init_ir(void){            //Hier word de LDR geinitialiseerd
-    DDRC &= ~(1 << IrPinLinks);
-    DDRC &= ~(1 << IrPinRechts);
+    DDRC &= ~(1 << IrPinLinksVoor);
+    DDRB &= ~(1 << IrPinLinksAchter);
+    DDRC &= ~(1 << IrPinRechtsVoor);
+    DDRB &= ~(1 << IrPinRechtsAchter);
     DDRL &= ~(1 << IrPinVoor);
 }
 
@@ -46,26 +39,35 @@ void init_overige_sensor(void){ //Hier worden de PIR en LDR geinitialiseerd
 void init_niet_sensor(void){    //Hier wordt alles dat geen sensor is geinitialiseerd
     DDRA &= ~(1 << Noodstop);
     DDRA &= ~(1 << ModusKnop);
-  /*DDRx |= (1 << Led1);
-    DDRx |= (1 << Led2);
-    DDRx |= (1 << Led3);
-    DDRx |= (1 << Led4); */
+ //   DDRx |= (1 << BuzzerPin);
+
 }
 
 void init(void){
-    init_ultrasoon();
     init_ir();
     init_overige_sensor();
     init_niet_sensor();
     init_h_bridge_a();
     init_h_bridge_b();
-}
 
+}
+void zoemer_beep (void)
+{
+    /*
+    PORTx |= (1<<BuzzerPin);
+    _delay_ms (10);
+    PORTx &= ~(1<<BuzzerPin);
+    _delay_ms (10);
+    PORTx |= (1<<BuzzerPin);
+    _delay_ms (10);
+    PORTx &= ~(1<<BuzzerPin);
+    */
+}
 int main(void)
 {
     init();
     enum AGV_Toestand {noodtoestand, autonoom_rijden, medewerker_volgen, ruststand, test_toestand};
-    enum AGV_Toestand huidige_toestand = ruststand;
+    enum AGV_Toestand huidige_toestand = autonoom_rijden;
 while(1){
 
     switch(huidige_toestand){
@@ -73,13 +75,31 @@ while(1){
         case noodtoestand:
             h_bridge_set_percentage_a(0);
             h_bridge_set_percentage_b(0);
-            // Zoemer beept
+            zoemer_beep();
             break;
 
         case autonoom_rijden:
-            h_bridge_set_percentage_a(100);
-            h_bridge_set_percentage_b(100);
-            if(IrLinksVoor)
+            if((PINL & (1<<IrPinLinksVoor))&&(PINC & (1<<IrPinRechtsVoor)))
+            {
+                h_bridge_set_percentage_a(100);
+                h_bridge_set_percentage_b(100);
+            }
+            if ((!(PINL & (1<<IrPinLinksVoor)))|(!(PINC & (1<<IrPinRechtsVoor))))
+            {
+                h_bridge_set_percentage_a(0);
+                h_bridge_set_percentage_b(0);
+                zoemer_beep();
+                for(int i=0;i<100;i++)
+                {
+                    _delay_ms(5);
+                }
+                h_bridge_set_percentage_a(100);
+                h_bridge_set_percentage_b(100);
+                for(int i=0;i<200;i++)
+                {
+                    _delay_ms(5);
+                }
+            }
             break;
 
         case medewerker_volgen:
@@ -87,7 +107,9 @@ while(1){
             break;
 
         case ruststand:
-
+            h_bridge_set_percentage_a(0);
+            h_bridge_set_percentage_b(0);
+            zoemer_beep();
             break;
 
         case test_toestand:
@@ -107,5 +129,7 @@ while(1){
 
 
     }
+}
  return 0;
 }
+
