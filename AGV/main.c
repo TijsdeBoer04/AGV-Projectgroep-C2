@@ -20,6 +20,9 @@
 #define Noodstop PA6
 #define BuzzerPin
 
+#define MotorOn 100
+#define MotorOff 0
+#define MotorBocht 30
 
 
 void init_ir(void){            //Hier word de LDR geinitialiseerd
@@ -63,6 +66,61 @@ void zoemer_beep (void)
     PORTx &= ~(1<<BuzzerPin);
     */
 }
+void boom_detectie (void)
+{
+    if ((!(PINL & (1<<IrPinLinksVoor)))|(!(PINC & (1<<IrPinRechtsVoor))))
+        {
+            h_bridge_set_percentage_a(MotorOff);
+            h_bridge_set_percentage_b(MotorOff);
+            zoemer_beep();
+            for(int i=0;i<100;i++)
+            {
+                _delay_ms(5);
+            }
+            h_bridge_set_percentage_a(MotorOn);
+            h_bridge_set_percentage_b(MotorOn);
+            for(int i=0;i<300;i++)
+            {
+                _delay_ms(5);
+            }
+        }
+}
+void bocht_detecie (void)
+{
+    static int loop_detect=0;
+    if(!(PINC&(1<<IrPinVoor)))
+    {
+        static int turn = 2;
+        switch(turn%2)
+        {
+        case(0):
+            for(int i=0;i<1500;i++)
+            {
+                h_bridge_set_percentage_a(MotorOn);
+                h_bridge_set_percentage_b(MotorBocht);
+                _delay_ms(1);
+            }
+            break;
+        case(1):
+            for(int i=0;i<1500;i++)
+            {
+                h_bridge_set_percentage_a(MotorBocht);
+                h_bridge_set_percentage_b(MotorOn);
+                _delay_ms(1);
+            }
+            break;
+        }
+        if(loop_detect==0)
+        {
+            loop_detect=1;
+            turn++;
+        }
+    }
+    if(PINC&(1<<IrPinVoor))
+    {
+        loop_detect=0;
+    }
+}
 int main(void)
 {
     init();
@@ -73,33 +131,19 @@ while(1){
     switch(huidige_toestand){
 
         case noodtoestand:
-            h_bridge_set_percentage_a(0);
-            h_bridge_set_percentage_b(0);
+            h_bridge_set_percentage_a(MotorOff);
+            h_bridge_set_percentage_b(MotorOff);
             zoemer_beep();
             break;
 
         case autonoom_rijden:
-            if((PINL & (1<<IrPinLinksVoor))&&(PINC & (1<<IrPinRechtsVoor)))
+            if((PINL & (1<<IrPinLinksVoor))&&(PINC & (1<<IrPinRechtsVoor))&&(PINC & (1<<IrPinVoor)))
             {
-                h_bridge_set_percentage_a(100);
-                h_bridge_set_percentage_b(100);
+                h_bridge_set_percentage_a(MotorOn);
+                h_bridge_set_percentage_b(MotorOn);
             }
-            if ((!(PINL & (1<<IrPinLinksVoor)))|(!(PINC & (1<<IrPinRechtsVoor))))
-            {
-                h_bridge_set_percentage_a(0);
-                h_bridge_set_percentage_b(0);
-                zoemer_beep();
-                for(int i=0;i<100;i++)
-                {
-                    _delay_ms(5);
-                }
-                h_bridge_set_percentage_a(100);
-                h_bridge_set_percentage_b(100);
-                for(int i=0;i<200;i++)
-                {
-                    _delay_ms(5);
-                }
-            }
+            boom_detectie();
+            bocht_detecie();
             break;
 
         case medewerker_volgen:
@@ -107,19 +151,19 @@ while(1){
             break;
 
         case ruststand:
-            h_bridge_set_percentage_a(0);
-            h_bridge_set_percentage_b(0);
+            h_bridge_set_percentage_a(MotorOff);
+            h_bridge_set_percentage_b(MotorOff);
             zoemer_beep();
             break;
 
         case test_toestand:
 
 
-            h_bridge_set_percentage_a(100);
-            h_bridge_set_percentage_b(100);
+            h_bridge_set_percentage_a(MotorOn);
+            h_bridge_set_percentage_b(MotorOn);
             _delay_ms(3000);
             for (int i=1;1<500;i++){
-            h_bridge_set_percentage_a(100);
+            h_bridge_set_percentage_a(MotorOn);
             h_bridge_set_percentage_b(25);
             _delay_ms(5);
             }
