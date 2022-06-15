@@ -9,14 +9,14 @@ int main(void)
     init_h_bridge_b();
 while(1){
         h_bridge_set_percentage_a(80);
-        h_bridge_set_percentage_b(80);
-        _delay_ms(1000);
+        h_bridge_set_percentage_b(0);
+        _delay_ms(10000);
         h_bridge_set_percentage_a(0);
         h_bridge_set_percentage_b(0);
         _delay_ms(1000);
         h_bridge_set_percentage_a(0);
-        h_bridge_set_percentage_b(100);
-        _delay_ms(500);
+        h_bridge_set_percentage_b(80);
+        _delay_ms(1000);
         h_bridge_set_percentage_a(0);
         h_bridge_set_percentage_b(0);
         _delay_ms(1000);}

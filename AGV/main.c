@@ -64,20 +64,22 @@ void init(void){
 int main(void)
 {
     init();
-    enum AGV_Toestand {noodtoestand, autonoom_rijden, medewerker_volgen,ruststand, test_toestand};
+    enum AGV_Toestand {noodtoestand, autonoom_rijden, medewerker_volgen, ruststand, test_toestand};
     enum AGV_Toestand huidige_toestand = ruststand;
 while(1){
 
-        h_bridge_set_percentage_a(90);
-        h_bridge_set_percentage_b(90);
-    /*switch(huidige_toestand){
+    switch(huidige_toestand){
 
         case noodtoestand:
-
+            h_bridge_set_percentage_a(0);
+            h_bridge_set_percentage_b(0);
+            // Zoemer beept
             break;
 
         case autonoom_rijden:
-
+            h_bridge_set_percentage_a(100);
+            h_bridge_set_percentage_b(100);
+            if(IrLinksVoor)
             break;
 
         case medewerker_volgen:
@@ -85,8 +87,7 @@ while(1){
             break;
 
         case ruststand:
-            h_bridge_set_percentage_a(100);
-            h_bridge_set_percentage_b(100);
+
             break;
 
         case test_toestand:
@@ -99,7 +100,7 @@ while(1){
             h_bridge_set_percentage_a(100);
             h_bridge_set_percentage_b(25);
             _delay_ms(5);
-            } */
+            }
 
 
             break;
@@ -108,22 +109,3 @@ while(1){
     }
  return 0;
 }
-
-
-
-
-
-
-
-/*h_bridge_set_percentage_a(100);
-        h_bridge_set_percentage_b(100);
-        _delay_ms(1000);
-        h_bridge_set_percentage_a(0);
-        h_bridge_set_percentage_b(0);
-        _delay_ms(1000);
-        h_bridge_set_percentage_a(-100);
-        h_bridge_set_percentage_b(-100);
-        _delay_ms(1000);
-        h_bridge_set_percentage_a(0);
-        h_bridge_set_percentage_b(0);
-        _delay_ms(1000);} */

@@ -22,3 +22,26 @@
 
 1653826493 c:\users\tldeb\desktop\program\agv_rijden\h_bridge_b.h
 
+1655107137 source:c:\users\tldeb\documents\github\agv-projectgroep-c2\agv_rijden\fuse.c
+	<avr/io.h>
+
+1655107137 source:c:\users\tldeb\documents\github\agv-projectgroep-c2\agv_rijden\h_bridge_a.c
+	<avr/io.h>
+	<avr/interrupt.h>
+	"h_bridge_a.h"
+
+1655107137 c:\users\tldeb\documents\github\agv-projectgroep-c2\agv_rijden\h_bridge_a.h
+
+1655107137 source:c:\users\tldeb\documents\github\agv-projectgroep-c2\agv_rijden\h_bridge_b.c
+	<avr/io.h>
+	<avr/interrupt.h>
+	"h_bridge_b.h"
+
+1655107137 c:\users\tldeb\documents\github\agv-projectgroep-c2\agv_rijden\h_bridge_b.h
+
+1655282763 source:c:\users\tldeb\documents\github\agv-projectgroep-c2\agv_rijden\main.c
+	<avr/io.h>
+	"h_bridge_a.h"
+	"h_bridge_b.h"
+	<util/delay.h>
+
