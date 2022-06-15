@@ -69,17 +69,18 @@ void zoemer_beep (void) {
 }
 
 
-void bocht_maken_rechts (void){
-    for (int i=1;1<1500;i++){
+void bocht_maken_links (void){
+    for(int i=0; i<1500; i++)
+    {
         h_bridge_set_percentage_a(MotorOn);
         h_bridge_set_percentage_b(MotorBocht);
         _delay_ms(1);
     }
-
 }
 
-void bocht_maken_links (void){
-    for (int i=1;1<1500;i++){
+void bocht_maken_rechts (void){
+    for(int i=0; i<1500; i++)
+    {
         h_bridge_set_percentage_a(MotorBocht);
         h_bridge_set_percentage_b(MotorOn);
         _delay_ms(1);
@@ -107,7 +108,7 @@ void boom_detectie (void)
 }
 void bocht_detecie (void)
 {
-    static int loop_detect=0;
+    static int loop_break=0;
     if(!(PINC&(1<<IrPinVoor)))
     {
         static int turn = 2;
@@ -120,15 +121,15 @@ void bocht_detecie (void)
             bocht_maken_links();
             break;
         }
-        if(loop_detect==0)
+        if(loop_break==0)
         {
-            loop_detect=1;
+            loop_break=1;
             turn++;
         }
     }
     if(PINC&(1<<IrPinVoor))
     {
-        loop_detect=0;
+        loop_break=0;
     }
 }
 int main(void)
