@@ -55,6 +55,7 @@ void init(void){
     init_h_bridge_b();
 
 }
+
 void zoemer_beep (void) {
 
     /*
@@ -67,7 +68,6 @@ void zoemer_beep (void) {
     PORTx &= ~(1<<BuzzerPin);
     */
 }
-
 
 void bocht_maken_links (void){
     for(int i=0; i<1500; i++)
@@ -86,7 +86,6 @@ void bocht_maken_rechts (void){
         _delay_ms(1);
     }
 }
-
 
 void boom_detectie (void)
 {
@@ -107,6 +106,7 @@ void boom_detectie (void)
             }
         }
 }
+
 void bocht_detecie (void)
 {
     static int loop_break=0;
@@ -133,6 +133,7 @@ void bocht_detecie (void)
         loop_break=0;
     }
 }
+
 void rand_detectie (void)
 {
     static int correctie = 0; // 0 = geen correctie, 1 = correctie IRlinks, 2 = correctie IRrechts
@@ -174,6 +175,7 @@ void rand_detectie (void)
     default: break;
     }
 }
+
 void obstakel_detectie (void)
 {
     while ((!(PING & (1<<PirPin))))
@@ -182,6 +184,7 @@ void obstakel_detectie (void)
         h_bridge_set_percentage_b(MotorOff);
     }
 }
+
 int main(void)
 {
     init();
