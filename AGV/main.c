@@ -7,8 +7,8 @@
 #define IrPinLinksVoor PL5
 #define IrPinRechtsVoor PC1
 #define IrPinVoor PC5
-#define IrPinLinksAchter PB1
-#define IrPinRechtsAchter PB3
+#define IrPinLinksAchter PB3
+#define IrPinRechtsAchter PB1
 
 #define PirPin PG1
 #define LdrPinLinks PF0
@@ -19,11 +19,11 @@
 #define Noodstop PD0
 #define BuzzerPin
 
-#define MotorOn 100
+#define MotorOn 70
 #define MotorOff 0
 #define MotorBocht 30
 
-#define RijdVoorwaarden (PINL & (1<<IrPinLinksVoor))&&(PINC & (1<<IrPinRechtsVoor))&&(PINC & (1<<IrPinVoor))&&(!(PINB & (1<<IrPinLinksAchter)))&&(!(PINB & (1<<IrPinRechtsAchter)))
+#define RijdVoorwaarden (PINL & (1<<IrPinLinksVoor))&&(PINC & (1<<IrPinRechtsVoor))&&(PINC & (1<<IrPinVoor))&&(!(PINB & (1<<IrPinLinksAchter)))&&(!(PINB & (1<<IrPinRechtsAchter)))&&(!(PING & (1<<PirPin)))
 
 void init_ir(void){            //Hier word de LDR geinitialiseerd
     DDRC &= ~(1 << IrPinLinksVoor);
@@ -70,21 +70,25 @@ void zoemer_beep (void) {
 }
 
 void bocht_maken_links (void){
-    for(int i=0; i<1500; i++)
+    for(int i=0; i<1000; i++)
     {
         h_bridge_set_percentage_a(MotorOn);
         h_bridge_set_percentage_b(MotorBocht);
         _delay_ms(1);
     }
+    h_bridge_set_percentage_a(MotorOn);
+    h_bridge_set_percentage_b(MotorOn);
 }
 
 void bocht_maken_rechts (void){
-    for(int i=0; i<1500; i++)
+    for(int i=0; i<1000; i++)
     {
         h_bridge_set_percentage_a(MotorBocht);
         h_bridge_set_percentage_b(MotorOn);
         _delay_ms(1);
     }
+    h_bridge_set_percentage_a(MotorOn);
+    h_bridge_set_percentage_b(MotorOn);
 }
 
 void boom_detectie (void)
@@ -94,13 +98,13 @@ void boom_detectie (void)
             h_bridge_set_percentage_a(MotorOff);
             h_bridge_set_percentage_b(MotorOff);
             zoemer_beep();
-            for(int i=0;i<100;i++)
+            for(int i=0;i<500;i++)
             {
                 _delay_ms(5);
             }
             h_bridge_set_percentage_a(MotorOn);
             h_bridge_set_percentage_b(MotorOn);
-            for(int i=0;i<300;i++)
+            for(int i=0;i<70;i++)
             {
                 _delay_ms(5);
             }
@@ -137,48 +141,37 @@ void bocht_detecie (void)
 void rand_detectie (void)
 {
     static int correctie = 0; // 0 = geen correctie, 1 = correctie IRlinks, 2 = correctie IRrechts
-    while ((!(PINB & (1<<IrPinLinksAchter)))||(!(PINB & (1<<IrPinRechtsAchter))))
-    {
     if (!(PINB & (1<<IrPinLinksAchter)))
         {
             h_bridge_set_percentage_a(20);
             h_bridge_set_percentage_b(50);
             correctie = 1;
         }
-    if (!(PINB & (1<<IrPinRechtsAchter)))
+    else if ((PINB & (1<<IrPinLinksAchter))&&(correctie==1))
+    {
+        for(int i=0;i<500;i++)
         {
             h_bridge_set_percentage_a(50);
             h_bridge_set_percentage_b(20);
-            correctie = 2;
+            _delay_ms(1);
         }
-    }
-    switch (correctie)
-    {
-    case (1):
-        for (int i=0;i<40;i++)
-            {
-                h_bridge_set_percentage_a(50);
-                h_bridge_set_percentage_b(20);
-                _delay_ms(5);
-            }
+        h_bridge_set_percentage_a(MotorOn);
+        h_bridge_set_percentage_b(MotorOn);
         correctie = 0;
-        break;
-    case (2):
-        for (int i=0;i<40;i++)
-            {
-                h_bridge_set_percentage_a(20);
-                h_bridge_set_percentage_b(50);
-                _delay_ms(5);
-            }
-        correctie = 0;
-        break;
-    default: break;
     }
+    /*if ((PINB & (1<<IrPinRechtsAchter)))
+        {
+            h_bridge_set_percentage_a(50);
+            h_bridge_set_percentage_b(20);
+            //correctie = 2;
+        }*/
+    boom_detectie();
+    //}
 }
 
 void obstakel_detectie (void)
 {
-    while ((!(PING & (1<<PirPin))))
+    while (!(PING & (1<<PirPin)))
     {
         h_bridge_set_percentage_a(MotorOff);
         h_bridge_set_percentage_b(MotorOff);
@@ -223,7 +216,7 @@ while(1){
             }
             obstakel_detectie();
             boom_detectie();
-            bocht_detecie();
+            //bocht_detecie();
             rand_detectie();
             break;
 
