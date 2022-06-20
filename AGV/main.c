@@ -174,6 +174,14 @@ void rand_detectie (void)
     default: break;
     }
 }
+void obstakel_detectie (void)
+{
+    while ((!(PING & (1<<PirPin))))
+    {
+        h_bridge_set_percentage_a(MotorOff);
+        h_bridge_set_percentage_b(MotorOff);
+    }
+}
 int main(void)
 {
     init();
@@ -210,6 +218,7 @@ while(1){
                 h_bridge_set_percentage_a(MotorOn);
                 h_bridge_set_percentage_b(MotorOn);
             }
+            obstakel_detectie();
             boom_detectie();
             bocht_detecie();
             rand_detectie();
