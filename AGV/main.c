@@ -8,7 +8,7 @@
 #define IrPinRechtsVoor PC1
 #define IrPinVoor PC5
 #define IrPinLinksAchter PB1
-#define IrPinRechtsAchter PB3
+#define IrPinRechtsAchter PL3
 
 #define PirPin PG1
 #define LdrPinLinks PF0
@@ -16,19 +16,37 @@
 
 
 #define ModusKnop PA2
-#define Noodstop PA6
+#define Noodstop PD0
 #define BuzzerPin
 
 #define MotorOn 100
 #define MotorOff 0
 #define MotorBocht 30
+enum AGV_Toestand {noodtoestand, autonoom_rijden, medewerker_volgen, ruststand, test_toestand};
+enum AGV_Toestand huidige_toestand = autonoom_rijden;
 
+ISR(INT0_vect) {
+    static int aantal_interrupts = 2;
+    aantal_interrupts++;
+    switch(aantal_interrupts%2) {
+
+        case(0):
+            huidige_toestand = autonoom_rijden;
+        break;
+
+        case(1):
+            huidige_toestand = noodtoestand;
+    break;
+    }
+
+
+}
 
 void init_ir(void){            //Hier word de LDR geinitialiseerd
     DDRC &= ~(1 << IrPinLinksVoor);
     DDRB &= ~(1 << IrPinLinksAchter);
     DDRC &= ~(1 << IrPinRechtsVoor);
-    DDRB &= ~(1 << IrPinRechtsAchter);
+    DDRL &= ~(1 << IrPinRechtsAchter);
     DDRL &= ~(1 << IrPinVoor);
 }
 
@@ -45,6 +63,13 @@ void init_niet_sensor(void){    //Hier wordt alles dat geen sensor is geinitiali
 
 }
 
+void init_interrupt(){
+    sei();
+    EICRA = (0 << ISC01) | (1 << ISC00);
+
+
+
+}
 void init(void){
 
     init_ir();
@@ -52,6 +77,7 @@ void init(void){
     init_niet_sensor();
     init_h_bridge_a();
     init_h_bridge_b();
+    init_interrupt();
 
 }
 void zoemer_beep (void) {
@@ -66,7 +92,6 @@ void zoemer_beep (void) {
     PORTx &= ~(1<<BuzzerPin);
     */
 }
-
 
 void bocht_maken_links (void){
     for(int i=0; i<1500; i++)
@@ -132,30 +157,29 @@ void bocht_detecie (void)
         loop_break=0;
     }
 }
-int NoodSituatie (int toestand)
+/*int NoodSituatie (int toestand)
 {
     if (PINA & (1<<Noodstop))
     {
         toestand = 0;
     }
     return toestand;
-}
+} */
+
 int main(void)
 {
     init();
-    enum AGV_Toestand {noodtoestand, autonoom_rijden, medewerker_volgen, ruststand, test_toestand};
-    enum AGV_Toestand huidige_toestand = autonoom_rijden;
+
 while(1){
 
         static int mode_loop_break = 0;
-        if (DDRA & (1 << ModusKnop)&(mode_loop_break == 0)){   // Ik weet niet zeker hoe de knop is aangesloten, dus kan zijn dat hier nog een ! tussen moet
+        if (DDRA & (1 << ModusKnop)&&(mode_loop_break == 0)){   // Ik weet niet zeker hoe de knop is aangesloten, dus kan zijn dat hier nog een ! tussen moet
            mode_loop_break = 1;
            if (huidige_toestand == 4){
             huidige_toestand = 1;
             }
            else {
-            huidige_toestand++;        //mogelijkerwijs is hier een extra variabele nodig om te switchen tussen toestanden
-            _delay_ms(200);
+            huidige_toestand++;
             }
         }
         else
@@ -176,7 +200,7 @@ while(1){
                 h_bridge_set_percentage_a(MotorOn);
                 h_bridge_set_percentage_b(MotorOn);
             }
-            huidige_toestand = NoodSituatie(huidige_toestand);
+
             boom_detectie();
             bocht_detecie();
             break;
