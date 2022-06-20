@@ -102,11 +102,6 @@ while(1){
 }
 
 
-
-
-
-
-
 /*h_bridge_set_percentage_a(100);
         h_bridge_set_percentage_b(100);
         _delay_ms(1000);
@@ -119,3 +114,5 @@ while(1){
         h_bridge_set_percentage_a(0);
         h_bridge_set_percentage_b(0);
         _delay_ms(1000);} */
+
+/* dit is de dummy van Stef van Grol voor versiebeheer.
