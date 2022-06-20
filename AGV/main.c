@@ -16,13 +16,14 @@
 
 
 #define ModusKnop PA2
-#define Noodstop PA6
+#define Noodstop PD0
 #define BuzzerPin
 
 #define MotorOn 100
 #define MotorOff 0
 #define MotorBocht 30
 
+#define RijdVoorwaarden (PINL & (1<<IrPinLinksVoor))&&(PINC & (1<<IrPinRechtsVoor))&&(PINC & (1<<IrPinVoor))&&(!(PINB & (1<<IrPinLinksAchter)))&&(!(PINB & (1<<IrPinRechtsAchter)))
 
 void init_ir(void){            //Hier word de LDR geinitialiseerd
     DDRC &= ~(1 << IrPinLinksVoor);
@@ -132,13 +133,46 @@ void bocht_detecie (void)
         loop_break=0;
     }
 }
-int NoodSituatie (int toestand)
+void rand_detectie (void)
 {
-    if (PINA & (1<<Noodstop))
+    static int correctie = 0; // 0 = geen correctie, 1 = correctie IRlinks, 2 = correctie IRrechts
+    while ((!(PINB & (1<<IrPinLinksAchter)))||(!(PINB & (1<<IrPinRechtsAchter))))
     {
-        toestand = 0;
+    if (!(PINB & (1<<IrPinLinksAchter)))
+        {
+            h_bridge_set_percentage_a(20);
+            h_bridge_set_percentage_b(50);
+            correctie = 1;
+        }
+    if (!(PINB & (1<<IrPinRechtsAchter)))
+        {
+            h_bridge_set_percentage_a(50);
+            h_bridge_set_percentage_b(20);
+            correctie = 2;
+        }
     }
-    return toestand;
+    switch (correctie)
+    {
+    case (1):
+        for (int i=0;i<40;i++)
+            {
+                h_bridge_set_percentage_a(50);
+                h_bridge_set_percentage_b(20);
+                _delay_ms(5);
+            }
+        correctie = 0;
+        break;
+    case (2):
+        for (int i=0;i<40;i++)
+            {
+                h_bridge_set_percentage_a(20);
+                h_bridge_set_percentage_b(50);
+                _delay_ms(5);
+            }
+        correctie = 0;
+        break;
+    default: break;
+    }
 }
 int main(void)
 {
@@ -148,14 +182,13 @@ int main(void)
 while(1){
 
         static int mode_loop_break = 0;
-        if (DDRA & (1 << ModusKnop)&(mode_loop_break == 0)){   // Ik weet niet zeker hoe de knop is aangesloten, dus kan zijn dat hier nog een ! tussen moet
+        if (DDRA & (1 << ModusKnop)&&(mode_loop_break == 0)){   // Ik weet niet zeker hoe de knop is aangesloten, dus kan zijn dat hier nog een ! tussen moet
            mode_loop_break = 1;
            if (huidige_toestand == 4){
             huidige_toestand = 1;
             }
            else {
             huidige_toestand++;        //mogelijkerwijs is hier een extra variabele nodig om te switchen tussen toestanden
-            _delay_ms(200);
             }
         }
         else
@@ -171,19 +204,18 @@ while(1){
             break;
 
         case autonoom_rijden:
-            if((PINL & (1<<IrPinLinksVoor))&&(PINC & (1<<IrPinRechtsVoor))&&(PINC & (1<<IrPinVoor)))
+
+            if(RijdVoorwaarden)
             {
                 h_bridge_set_percentage_a(MotorOn);
                 h_bridge_set_percentage_b(MotorOn);
             }
-            huidige_toestand = NoodSituatie(huidige_toestand);
             boom_detectie();
             bocht_detecie();
+            rand_detectie();
             break;
 
         case medewerker_volgen:
-
-
 
             break;
 
@@ -195,17 +227,12 @@ while(1){
 
         case test_toestand:
 
-
             for (int i=1;1<500;i++){
             h_bridge_set_percentage_a(MotorOn);
             h_bridge_set_percentage_b(25);
             _delay_ms(5);
             }
-
-
             break;
-
-
     }
 }
  return 0;
