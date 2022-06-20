@@ -139,15 +139,20 @@ int main(void)
     enum AGV_Toestand {noodtoestand, autonoom_rijden, medewerker_volgen, ruststand, test_toestand};
     enum AGV_Toestand huidige_toestand = autonoom_rijden;
 while(1){
-
-        if (DDRA & (1 << ModusKnop)){   // Ik weet niet zeker hoe de knop is aangesloten, dus kan zijn dat hier nog een ! tussen moet
+        static int mode_loop_break = 0;
+        if (DDRA & (1 << ModusKnop)& (mode_loop_break == 0)){   // Ik weet niet zeker hoe de knop is aangesloten, dus kan zijn dat hier nog een ! tussen moet
+           mode_loop_break = 1;
            if (huidige_toestand == 5){
             huidige_toestand = 1;
             }
            else {
             huidige_toestand++;        //mogelijkerwijs is hier een extra variabele nodig om te switchen tussen toestanden
-            _delay_ms(500);
+            _delay_ms(200);
             }
+        }
+        else
+        {
+            mode_loop_break = 0;
         }
     switch(huidige_toestand){
 
