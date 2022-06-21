@@ -60,11 +60,11 @@ void zoemer_beep (void) {
 
     /*
     PORTx |= (1<<BuzzerPin);
-    _delay_ms (10);
+    _delay_ms (5);
     PORTx &= ~(1<<BuzzerPin);
-    _delay_ms (10);
+    _delay_ms (5);
     PORTx |= (1<<BuzzerPin);
-    _delay_ms (10);
+    _delay_ms (5);
     PORTx &= ~(1<<BuzzerPin);
     */
 }
@@ -159,7 +159,7 @@ void rand_detectie (void)
         h_bridge_set_percentage_b(MotorOn);
         correctie = 0;
     }
-    /*if ((PINB & (1<<IrPinRechtsAchter)))
+    /*if (!(PINB & (1<<IrPinRechtsAchter)))
         {
             h_bridge_set_percentage_a(50);
             h_bridge_set_percentage_b(20);
