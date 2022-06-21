@@ -22,6 +22,7 @@
 #define MotorOn 100
 #define MotorOff 0
 #define MotorBocht 30
+
 enum AGV_Toestand {noodtoestand, autonoom_rijden, medewerker_volgen, ruststand, test_toestand};
 enum AGV_Toestand huidige_toestand = autonoom_rijden;
 
@@ -65,6 +66,7 @@ void init_niet_sensor(void){    //Hier wordt alles dat geen sensor is geinitiali
 
 void init_interrupt(){
     sei();
+    EIMSK = (1<<INT0);
     EICRA = (0 << ISC01) | (1 << ISC00);
 
 
