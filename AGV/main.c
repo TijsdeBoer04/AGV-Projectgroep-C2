@@ -159,14 +159,25 @@ void rand_detectie (void)
         h_bridge_set_percentage_b(MotorOn);
         correctie = 0;
     }
-    /*if (!(PINB & (1<<IrPinRechtsAchter)))
+    if (!(PINB & (1<<IrPinRechtsAchter)))
+        {
+            h_bridge_set_percentage_a(20);
+            h_bridge_set_percentage_b(50);
+            correctie = 2;
+        }
+    else if ((PINB & (1<<IrPinRechtsAchter))&&(correctie==2))
+    {
+        for(int i=0;i<500;i++)
         {
             h_bridge_set_percentage_a(50);
             h_bridge_set_percentage_b(20);
-            //correctie = 2;
-        }*/
+            _delay_ms(1);
+        }
+        h_bridge_set_percentage_a(MotorOn);
+        h_bridge_set_percentage_b(MotorOn);
+        correctie = 0;
+    }
     boom_detectie();
-    //}
 }
 
 void obstakel_detectie (void)
