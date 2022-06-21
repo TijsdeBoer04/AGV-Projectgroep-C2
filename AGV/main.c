@@ -159,15 +159,6 @@ void bocht_detecie (void)
         loop_break=0;
     }
 }
-/*int NoodSituatie (int toestand)
-{
-    if (PINA & (1<<Noodstop))
-    {
-        toestand = 0;
-    }
-    return toestand;
-} */
-
 int main(void)
 {
     init();
