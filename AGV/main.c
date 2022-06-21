@@ -23,7 +23,7 @@
 #define MotorOff 0
 #define MotorBocht 30
 
-#define RijdVoorwaarden (PINL & (1<<IrPinLinksVoor))&&(PINC & (1<<IrPinRechtsVoor))&&(PINC & (1<<IrPinVoor))&&(!(PINB & (1<<IrPinLinksAchter)))&&(!(PINB & (1<<IrPinRechtsAchter)))&&(!(PING & (1<<PirPin)))
+#define RijdVoorwaarden (PINL & (1<<IrPinLinksVoor))&&(PINC & (1<<IrPinRechtsVoor))&&(PINC & (1<<IrPinVoor))/*&&(!(PINB & (1<<IrPinLinksAchter)))&&(!(PINB & (1<<IrPinRechtsAchter)))&&(!(PING & (1<<PirPin)))*/
 
 void init_ir(void){            //Hier word de LDR geinitialiseerd
     DDRC &= ~(1 << IrPinLinksVoor);
@@ -225,10 +225,10 @@ while(1){
                 h_bridge_set_percentage_a(MotorOn);
                 h_bridge_set_percentage_b(MotorOn);
             }
-            obstakel_detectie();
+            //obstakel_detectie();
             boom_detectie();
-            //bocht_detecie();
-            rand_detectie();
+            bocht_detecie();
+            //rand_detectie();
             break;
 
         case medewerker_volgen:
