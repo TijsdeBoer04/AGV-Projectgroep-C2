@@ -228,7 +228,7 @@ while(1){
             //obstakel_detectie();
             boom_detectie();
             bocht_detecie();
-            //rand_detectie();
+            rand_detectie();
             break;
 
         case medewerker_volgen:
