@@ -66,6 +66,15 @@ void init_niet_sensor(void){    //Hier wordt alles dat geen sensor is geinitiali
 
 }
 
+void init_interrupt(){
+    sei();
+    EIMSK = (1<<INT0);
+    EICRA = (0 << ISC01) | (1 << ISC00);
+
+
+
+}
+
 void init(void){
 
     init_ir();
@@ -73,6 +82,7 @@ void init(void){
     init_niet_sensor();
     init_h_bridge_a();
     init_h_bridge_b();
+    init_interrupt();
 
 }
 
