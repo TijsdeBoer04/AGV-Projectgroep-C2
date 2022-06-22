@@ -21,10 +21,12 @@
 
 #define MotorOn 50
 #define MotorOff 0
-#define MotorBocht 30
+#define MotorBocht 20
 
 #define RijdVoorwaarden (PINL & (1<<IrPinLinksVoor))&&(PINC & (1<<IrPinRechtsVoor))&&(PINC & (1<<IrPinVoor))&&(!(PINB & (1<<IrPinLinksAchter)))&&(!(PINL & (1<<IrPinRechtsAchter)))/*&&(!(PING & (1<<PirPin)))*/
 
+enum AGV_Toestand {noodtoestand, autonoom_rijden, medewerker_volgen, ruststand, test_toestand};
+enum AGV_Toestand huidige_toestand = autonoom_rijden;
 void init_ir(void){            //Hier word de LDR geinitialiseerd
     DDRC &= ~(1 << IrPinLinksVoor);
     DDRB &= ~(1 << IrPinLinksAchter);
@@ -77,7 +79,7 @@ void zoemer_beep (void) {
 }
 
 void bocht_maken_links (void){
-    for(int i=0; i<1000; i++)
+    for(int i=0; i<2900; i++)
     {
         h_bridge_set_percentage_a(MotorOn);
         h_bridge_set_percentage_b(MotorBocht);
@@ -88,7 +90,7 @@ void bocht_maken_links (void){
 }
 
 void bocht_maken_rechts (void){
-    for(int i=0; i<1000; i++)
+    for(int i=0; i<2900; i++)
     {
         h_bridge_set_percentage_a(MotorBocht);
         h_bridge_set_percentage_b(MotorOn);
@@ -105,7 +107,7 @@ void boom_detectie (void)
             h_bridge_set_percentage_a(MotorOff);
             h_bridge_set_percentage_b(MotorOff);
             zoemer_beep();
-            for(int i=0;i<500;i++)
+            for(int i=0;i<250;i++)
             {
                 _delay_ms(5);
             }
@@ -136,7 +138,7 @@ void bocht_detecie (void)
         if(loop_break==0)
         {
             loop_break=1;
-            turn++;
+            //turn++;
         }
     }
     if(PINC&(1<<IrPinVoor))
@@ -147,34 +149,42 @@ void bocht_detecie (void)
 
 void rand_detectie (void)
 {
-    static int max = 0;
+    static int maxL = 0;
+    static int maxR = 0;
     if (!(PINB & (1<<IrPinLinksAchter)))
         {
-            if(max<20000)
+            if(maxL<17500)
             {
-            h_bridge_set_percentage_a(20);
+            h_bridge_set_percentage_a(35);
             h_bridge_set_percentage_b(50);
-            max++;
+            maxL++;
             }
             else{h_bridge_set_percentage_a(MotorOn);
             h_bridge_set_percentage_b(MotorOn);}
         }
     else if (!(PINL & (1<<IrPinRechtsAchter)))
         {
-            if(max<20000)
+            if(maxR<17500)
             {
             h_bridge_set_percentage_a(50);
-            h_bridge_set_percentage_b(20);
-            max++;
+            h_bridge_set_percentage_b(35);
+            maxR++;
             }
             else{h_bridge_set_percentage_a(MotorOn);
             h_bridge_set_percentage_b(MotorOn);}
         }
     else if ((PINL & (1<<IrPinRechtsAchter))&&(PINB & (1<<IrPinLinksAchter)))
         {
-            max = 0;
             h_bridge_set_percentage_a(MotorOn);
             h_bridge_set_percentage_b(MotorOn);
+        }
+    if (PINL & (1<<IrPinRechtsAchter))
+        {
+            maxR=0;
+        }
+    if (PINB & (1<<IrPinLinksAchter))
+        {
+            maxL = 0;
         }
     boom_detectie();
 }
@@ -192,12 +202,11 @@ int main(void)
 {
     init();
     enum AGV_Toestand {noodtoestand, autonoom_rijden, medewerker_volgen, ruststand, test_toestand};
-    enum AGV_Toestand huidige_toestand = ruststand;
+    enum AGV_Toestand huidige_toestand = autonoom_rijden;
 while(1){
 
-        if (DDRA & (1 << ModusKnop)){zoemer_beep();}
         static int mode_loop_break = 0;
-        if ((DDRA & (1 << ModusKnop))&&(mode_loop_break == 0)){   // Ik weet niet zeker hoe de knop is aangesloten, dus kan zijn dat hier nog een ! tussen moet
+        if ((PINA & (1 << ModusKnop))&&(mode_loop_break == 0)){   // Ik weet niet zeker hoe de knop is aangesloten, dus kan zijn dat hier nog een ! tussen moet
            mode_loop_break = 1;
            if (huidige_toestand == 3){
             huidige_toestand = 1;
@@ -226,7 +235,9 @@ while(1){
                 h_bridge_set_percentage_b(MotorOn);
             }
             //obstakel_detectie();
+            rand_detectie();
             boom_detectie();
+            rand_detectie();
             bocht_detecie();
             rand_detectie();
             break;
