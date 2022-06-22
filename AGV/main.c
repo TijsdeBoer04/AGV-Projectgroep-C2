@@ -8,7 +8,7 @@
 #define IrPinRechtsVoor PC1
 #define IrPinVoor PC5
 #define IrPinLinksAchter PB3
-#define IrPinRechtsAchter PB1
+#define IrPinRechtsAchter PL3
 
 #define PirPin PG1
 #define LdrPinLinks PF0
@@ -17,19 +17,19 @@
 
 #define ModusKnop PA2
 #define Noodstop PD0
-#define BuzzerPin
+#define BuzzerPin PL1
 
-#define MotorOn 70
+#define MotorOn 50
 #define MotorOff 0
 #define MotorBocht 30
 
-#define RijdVoorwaarden (PINL & (1<<IrPinLinksVoor))&&(PINC & (1<<IrPinRechtsVoor))&&(PINC & (1<<IrPinVoor))/*&&(!(PINB & (1<<IrPinLinksAchter)))&&(!(PINB & (1<<IrPinRechtsAchter)))&&(!(PING & (1<<PirPin)))*/
+#define RijdVoorwaarden (PINL & (1<<IrPinLinksVoor))&&(PINC & (1<<IrPinRechtsVoor))&&(PINC & (1<<IrPinVoor))&&(!(PINB & (1<<IrPinLinksAchter)))&&(!(PINL & (1<<IrPinRechtsAchter)))/*&&(!(PING & (1<<PirPin)))*/
 
 void init_ir(void){            //Hier word de LDR geinitialiseerd
     DDRC &= ~(1 << IrPinLinksVoor);
     DDRB &= ~(1 << IrPinLinksAchter);
     DDRC &= ~(1 << IrPinRechtsVoor);
-    DDRB &= ~(1 << IrPinRechtsAchter);
+    DDRL &= ~(1 << IrPinRechtsAchter);
     DDRL &= ~(1 << IrPinVoor);
 }
 
@@ -42,7 +42,7 @@ void init_overige_sensor(void){ //Hier worden de PIR en LDR geinitialiseerd
 void init_niet_sensor(void){    //Hier wordt alles dat geen sensor is geinitialiseerd
     DDRA &= ~(1 << Noodstop);
     DDRA &= ~(1 << ModusKnop);
- //   DDRx |= (1 << BuzzerPin);
+    DDRL |= (1 << BuzzerPin);
 
 }
 
@@ -58,15 +58,22 @@ void init(void){
 
 void zoemer_beep (void) {
 
-    /*
-    PORTx |= (1<<BuzzerPin);
-    _delay_ms (5);
-    PORTx &= ~(1<<BuzzerPin);
-    _delay_ms (5);
-    PORTx |= (1<<BuzzerPin);
-    _delay_ms (5);
-    PORTx &= ~(1<<BuzzerPin);
-    */
+    PORTL |= (1<<BuzzerPin);
+    for (int i=0;i<20;i++)
+    {
+        _delay_ms(5);
+    }
+    PORTL &= ~(1<<BuzzerPin);
+    for (int i=0;i<20;i++)
+    {
+        _delay_ms(5);
+    }
+    PORTL |= (1<<BuzzerPin);
+    for (int i=0;i<20;i++)
+    {
+        _delay_ms(5);
+    }
+    PORTL &= ~(1<<BuzzerPin);
 }
 
 void bocht_maken_links (void){
@@ -104,7 +111,7 @@ void boom_detectie (void)
             }
             h_bridge_set_percentage_a(MotorOn);
             h_bridge_set_percentage_b(MotorOn);
-            for(int i=0;i<70;i++)
+            for(int i=0;i<100;i++)
             {
                 _delay_ms(5);
             }
@@ -140,43 +147,35 @@ void bocht_detecie (void)
 
 void rand_detectie (void)
 {
-    static int correctie = 0; // 0 = geen correctie, 1 = correctie IRlinks, 2 = correctie IRrechts
+    static int max = 0;
     if (!(PINB & (1<<IrPinLinksAchter)))
         {
+            if(max<20000)
+            {
             h_bridge_set_percentage_a(20);
             h_bridge_set_percentage_b(50);
-            correctie = 1;
+            max++;
+            }
+            else{h_bridge_set_percentage_a(MotorOn);
+            h_bridge_set_percentage_b(MotorOn);}
         }
-    else if ((PINB & (1<<IrPinLinksAchter))&&(correctie==1))
-    {
-        for(int i=0;i<500;i++)
+    else if (!(PINL & (1<<IrPinRechtsAchter)))
         {
+            if(max<20000)
+            {
             h_bridge_set_percentage_a(50);
             h_bridge_set_percentage_b(20);
-            _delay_ms(1);
+            max++;
+            }
+            else{h_bridge_set_percentage_a(MotorOn);
+            h_bridge_set_percentage_b(MotorOn);}
         }
-        h_bridge_set_percentage_a(MotorOn);
-        h_bridge_set_percentage_b(MotorOn);
-        correctie = 0;
-    }
-    if (!(PINB & (1<<IrPinRechtsAchter)))
+    else if ((PINL & (1<<IrPinRechtsAchter))&&(PINB & (1<<IrPinLinksAchter)))
         {
-            h_bridge_set_percentage_a(20);
-            h_bridge_set_percentage_b(50);
-            correctie = 2;
+            max = 0;
+            h_bridge_set_percentage_a(MotorOn);
+            h_bridge_set_percentage_b(MotorOn);
         }
-    else if ((PINB & (1<<IrPinRechtsAchter))&&(correctie==2))
-    {
-        for(int i=0;i<500;i++)
-        {
-            h_bridge_set_percentage_a(50);
-            h_bridge_set_percentage_b(20);
-            _delay_ms(1);
-        }
-        h_bridge_set_percentage_a(MotorOn);
-        h_bridge_set_percentage_b(MotorOn);
-        correctie = 0;
-    }
     boom_detectie();
 }
 
@@ -193,17 +192,19 @@ int main(void)
 {
     init();
     enum AGV_Toestand {noodtoestand, autonoom_rijden, medewerker_volgen, ruststand, test_toestand};
-    enum AGV_Toestand huidige_toestand = autonoom_rijden;
+    enum AGV_Toestand huidige_toestand = ruststand;
 while(1){
 
         static int mode_loop_break = 0;
-        if (DDRA & (1 << ModusKnop)&&(mode_loop_break == 0)){   // Ik weet niet zeker hoe de knop is aangesloten, dus kan zijn dat hier nog een ! tussen moet
+        if (!(DDRA & (1 << ModusKnop))&&(mode_loop_break == 0)){   // Ik weet niet zeker hoe de knop is aangesloten, dus kan zijn dat hier nog een ! tussen moet
            mode_loop_break = 1;
-           if (huidige_toestand == 4){
+           if (huidige_toestand == 3){
             huidige_toestand = 1;
+            zoemer_beep();
             }
-           else {
-            huidige_toestand++;        //mogelijkerwijs is hier een extra variabele nodig om te switchen tussen toestanden
+           if (huidige_toestand == 1){
+            huidige_toestand = 3;
+            zoemer_beep();
             }
         }
         else
@@ -238,7 +239,6 @@ while(1){
         case ruststand:
             h_bridge_set_percentage_a(MotorOff);
             h_bridge_set_percentage_b(MotorOff);
-            zoemer_beep();
             break;
 
         case test_toestand:
