@@ -195,16 +195,15 @@ int main(void)
     enum AGV_Toestand huidige_toestand = ruststand;
 while(1){
 
+        if (DDRA & (1 << ModusKnop)){zoemer_beep();}
         static int mode_loop_break = 0;
-        if (!(DDRA & (1 << ModusKnop))&&(mode_loop_break == 0)){   // Ik weet niet zeker hoe de knop is aangesloten, dus kan zijn dat hier nog een ! tussen moet
+        if ((DDRA & (1 << ModusKnop))&&(mode_loop_break == 0)){   // Ik weet niet zeker hoe de knop is aangesloten, dus kan zijn dat hier nog een ! tussen moet
            mode_loop_break = 1;
            if (huidige_toestand == 3){
             huidige_toestand = 1;
-            zoemer_beep();
             }
            if (huidige_toestand == 1){
             huidige_toestand = 3;
-            zoemer_beep();
             }
         }
         else
@@ -239,6 +238,7 @@ while(1){
         case ruststand:
             h_bridge_set_percentage_a(MotorOff);
             h_bridge_set_percentage_b(MotorOff);
+            // waardes moeten gereset worden
             break;
 
         case test_toestand:

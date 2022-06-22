@@ -671,16 +671,17 @@ Disassembly of section .text:
  5d6:	0e 94 de 02 	call	0x5bc	; 0x5bc <init>
  5da:	c1 e0       	ldi	r28, 0x01	; 1
  5dc:	d0 e0       	ldi	r29, 0x00	; 0
- 5de:	0a 99       	sbic	0x01, 2	; 1
- 5e0:	0f c0       	rjmp	.+30     	; 0x600 <main+0x2e>
- 5e2:	80 91 02 02 	lds	r24, 0x0202
- 5e6:	90 91 03 02 	lds	r25, 0x0203
- 5ea:	89 2b       	or	r24, r25
- 5ec:	49 f4       	brne	.+18     	; 0x600 <main+0x2e>
- 5ee:	d0 93 03 02 	sts	0x0203, r29
- 5f2:	c0 93 02 02 	sts	0x0202, r28
- 5f6:	0e 94 c3 01 	call	0x386	; 0x386 <zoemer_beep>
- 5fa:	0e 94 c3 01 	call	0x386	; 0x386 <zoemer_beep>
+ 5de:	0a 9b       	sbis	0x01, 2	; 1
+ 5e0:	02 c0       	rjmp	.+4      	; 0x5e6 <main+0x14>
+ 5e2:	0e 94 c3 01 	call	0x386	; 0x386 <zoemer_beep>
+ 5e6:	0a 9b       	sbis	0x01, 2	; 1
+ 5e8:	0b c0       	rjmp	.+22     	; 0x600 <main+0x2e>
+ 5ea:	80 91 02 02 	lds	r24, 0x0202
+ 5ee:	90 91 03 02 	lds	r25, 0x0203
+ 5f2:	89 2b       	or	r24, r25
+ 5f4:	29 f4       	brne	.+10     	; 0x600 <main+0x2e>
+ 5f6:	d0 93 03 02 	sts	0x0203, r29
+ 5fa:	c0 93 02 02 	sts	0x0202, r28
  5fe:	04 c0       	rjmp	.+8      	; 0x608 <main+0x36>
  600:	10 92 03 02 	sts	0x0203, r1
  604:	10 92 02 02 	sts	0x0202, r1
