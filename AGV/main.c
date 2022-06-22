@@ -27,6 +27,24 @@
 
 enum AGV_Toestand {noodtoestand, autonoom_rijden, medewerker_volgen, ruststand, test_toestand};
 enum AGV_Toestand huidige_toestand = autonoom_rijden;
+
+ISR(INT0_vect) {
+    static int aantal_interrupts = 2;
+    aantal_interrupts++;
+    switch(aantal_interrupts%2) {
+
+        case(0):
+            huidige_toestand = autonoom_rijden;
+        break;
+
+        case(1):
+            huidige_toestand = noodtoestand;
+    break;
+    }
+
+
+}
+
 void init_ir(void){            //Hier word de LDR geinitialiseerd
     DDRC &= ~(1 << IrPinLinksVoor);
     DDRB &= ~(1 << IrPinLinksAchter);
