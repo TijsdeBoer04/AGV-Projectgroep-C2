@@ -168,7 +168,17 @@ void bocht_detecie (void)
 
 int main(void)
 {
-    init();
+    DDRE &= ~(1 << PH3);
+    DDRE |= (1 << PH4);
+    PORTH &= ~(1 << PH4);
+
+
+
+    return 0;
+
+
+
+  /*  init();
 
 while(1){
 
@@ -232,7 +242,7 @@ while(1){
 
     }
 }
- return 0;
+ return 0; */
 }
 
 /* Dit is een Dummy van Patrick Schuurman voor versiebeheer.*/
