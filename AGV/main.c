@@ -229,11 +229,9 @@ void obstakel_detectie (void)
 int main(void)
 {
     init();
-    enum AGV_Toestand {noodtoestand, autonoom_rijden, medewerker_volgen, ruststand, test_toestand};
-    enum AGV_Toestand huidige_toestand = autonoom_rijden;
 while(1){
 
-        static int mode_loop_break = 0;
+        /*static int mode_loop_break = 0;
         if ((PINA & (1 << ModusKnop))&&(mode_loop_break == 0)){   // Ik weet niet zeker hoe de knop is aangesloten, dus kan zijn dat hier nog een ! tussen moet
            mode_loop_break = 1;
            if (huidige_toestand == 3){
@@ -246,12 +244,13 @@ while(1){
         else
         {
             mode_loop_break = 0;
-        }
+        }*/
     switch(huidige_toestand){
 
         case noodtoestand:
             h_bridge_set_percentage_a(MotorOff);
             h_bridge_set_percentage_b(MotorOff);
+            _delay_ms(1000);
             zoemer_beep();
             break;
 
