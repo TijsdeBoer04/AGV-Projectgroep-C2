@@ -65,6 +65,11 @@ void init_niet_sensor(void){    //Hier wordt alles dat geen sensor is geinitiali
     DDRL |= (1 << BuzzerPin);
 
 }
+void init_adc(void)
+{
+        ADCSRA = (1<<ADEN) | (1<<ADPS2) | (1<<ADPS1) | (1<<ADPS0); //ADC kanaal 1 aan, laatste drie bits voor prescaler op 128
+        ADCSRB = 0; // ADC kanaal twee staat uit
+}
 
 void init_interrupt(){
     sei();
@@ -83,6 +88,7 @@ void init(void){
     init_h_bridge_a();
     init_h_bridge_b();
     init_interrupt();
+    init_adc();
 
 }
 
@@ -226,6 +232,29 @@ void obstakel_detectie (void)
     }
 }
 
+int omzetten_ldr(int welke_ldr) {
+
+    if(welke_ldr){
+
+        ADMUX = 0b01000010;         // Hier wordt gezegd dat de ADC pin A1 moet uitlezen
+    }
+    else{
+        ADMUX = 0b01000000;         // Hier wordt pin A0 mee uitgelezen
+    }
+    ADCSRA |= (1 << ADSC);          // Hier wordt de conversie gestart (logische 1 naar ADC)
+    loop_until_bit_is_clear(ADCSRA, ADSC);  // Hier wordt de conversie afgerond
+    return ADC;
+
+}
+
+void ldr_detect (void)
+{
+    int buffer = 120;
+    if(omzetten_ldr(1) >= omzetten_ldr(0) + buffer|| omzetten_ldr(1)+ buffer<= omzetten_ldr(0)){
+            h_bridge_set_percentage_a(MotorOff);
+            h_bridge_set_percentage_b(MotorOff);
+    }
+}
 int main(void)
 {
     init();
@@ -261,7 +290,7 @@ while(1){
                 h_bridge_set_percentage_a(MotorOn);
                 h_bridge_set_percentage_b(MotorOn);
             }
-            //obstakel_detectie();
+            ldr_detect();
             rand_detectie();
             boom_detectie();
             rand_detectie();
@@ -281,11 +310,15 @@ while(1){
 
         case test_toestand:
 
-            for (int i=1;1<500;i++){
-            h_bridge_set_percentage_a(MotorOn);
-            h_bridge_set_percentage_b(25);
-            _delay_ms(5);
-            }
+        //int buffer = 100;   // ik heb geen idee hoe groot de buffer moet zijn, als hij te klein is dan stopt de agv te snel
+                        // als hij te groot is dan is de agv te insensitief
+
+
+        /*if(omzetten_ldr(1) >= omzetten_ldr(0) + buffer|| omzetten_ldr(1)+ buffer<= omzetten_ldr(0)){
+            h_bridge_set_percentage_a(MotorOff);
+            h_bridge_set_percentage_b(MotorOff);
+            zoemer_beep();
+    }*/
             break;
     }
 }
@@ -293,4 +326,5 @@ while(1){
 }
 
 /* Dit is een Dummy van Patrick Schuurman voor versiebeheer.*/
+
 
